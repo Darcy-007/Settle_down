@@ -1,12 +1,15 @@
 package com.example.settle_down
 
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedListener, HomeFragment.OnHomeFragmentInteractionListener {
+
     private val auth = FirebaseAuth.getInstance()
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     private val RC_SIGN_IN = 1
@@ -35,7 +38,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeListeners() {
-        // TODO: Create an AuthStateListener that passes the UID
         // to the MovieQuoteFragment if the user is logged in
         // and goes back to the Splash fragment otherwise.
         // See https://firebase.google.com/docs/auth/users#the_user_lifecycle
@@ -50,16 +52,41 @@ class MainActivity : AppCompatActivity() {
                 Log.d(Constants.TAG, "Photo URL: ${user.photoUrl}")
                 switchToHomeFragment(user.uid)
             }else{
-//                switchToFragment()
+                switchToStartingFragment()
             }
         }
 
+    }
+
+    private fun switchToStartingFragment() {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, StartingFragment())
+        ft.commit()
     }
 
     private fun switchToHomeFragment(uid: String) {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid))
         ft.commit()
+    }
+
+    override fun onLoginButtonPressed() {
+        launchLoginUI()
+    }
+
+    private fun launchLoginUI() {
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.PhoneBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build())
+        val loginIntent =  AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .build()
+        startActivityForResult(loginIntent, RC_SIGN_IN)
+    }
+
+    override fun OnHomeFragmentInteraction() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

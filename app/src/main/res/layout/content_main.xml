@@ -8,6 +8,5 @@
     android:layout_height="match_parent"
     app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
     tools:context=".MainActivity"
-    tools:showIn="@layout/activity_main"
-    android:background="#bee">
+    tools:showIn="@layout/activity_main">
 </FrameLayout>

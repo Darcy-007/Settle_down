@@ -42,27 +42,15 @@
         />
 
     <Button
-        android:id="@+id/first_page_negative_button"
+        android:id="@+id/first_page_log_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/first_page_negative_button_text"
+        android:text="@string/starting_page_login"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/first_page_question"
         android:background="@color/colorLightBlue"
         android:width="200dp"
         android:layout_marginBottom="25dp"
-        android:textColor="@color/colorWhite"
-        />
-
-    <Button
-        android:id="@+id/first_page_positive_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_page_positive_button_text"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/first_page_negative_button"
-        android:background="@color/colorLightBlue"
-        android:width="200dp"
         android:textColor="@color/colorWhite"
         />
 
