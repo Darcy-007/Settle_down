@@ -1,13 +1,9 @@
 package com.example.settle_down.Models
 
-import android.os.Parcelable
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.ServerTimestamp
-import kotlinx.android.parcel.Parcelize
-
-
 
 data class MatchResult(
     val Challenger: String = "",
@@ -15,10 +11,10 @@ data class MatchResult(
     val Code: String = "",
     val EventResolved: String = "",
     val GameType: Game = MathGame(),
-    val Receiver: String = "",
+    var Receiver: String = "",
     val ReceiverScore: Int = 0,
     val Winner: String = "",
-    val isComplete: Boolean = false
+    var isComplete: Boolean = false
     ){
     @get:Exclude var id = ""
     @ServerTimestamp var Date: Timestamp? = null
