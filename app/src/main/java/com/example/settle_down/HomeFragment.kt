@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
@@ -29,6 +30,7 @@ class HomeFragment : Fragment() {
     private var uid: String? = null
 //    private var param2: String? = null
     private var listener: OnHomeFragmentInteractionListener? = null
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +49,7 @@ class HomeFragment : Fragment() {
         view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
         view.imageView.setOnClickListener {
             Log.d(Constants.TAG, "I'm pressed")
+            auth.signOut()
         }
         return view
     }
