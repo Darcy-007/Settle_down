@@ -4,8 +4,11 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.firebase.ui.auth.AuthUI
 import com.example.settle_down.Models.MatchResult
 import com.google.firebase.auth.FirebaseAuth
+
+class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedListener, HomeFragment.OnHomeFragmentInteractionListener {
 
 class MainActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionListener {
     private val auth = FirebaseAuth.getInstance()
@@ -36,7 +39,6 @@ class MainActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
     }
 
     private fun initializeListeners() {
-        // TODO: Create an AuthStateListener that passes the UID
         // to the MovieQuoteFragment if the user is logged in
         // and goes back to the Splash fragment otherwise.
         // See https://firebase.google.com/docs/auth/users#the_user_lifecycle
@@ -51,16 +53,41 @@ class MainActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
                 Log.d(Constants.TAG, "Photo URL: ${user.photoUrl}")
                 switchToHomeFragment(user.uid, user.displayName, user.photoUrl)
             }else{
-//                switchToFragment()
+                switchToStartingFragment()
             }
         }
 
+    }
+
+    private fun switchToStartingFragment() {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, StartingFragment())
+        ft.commit()
     }
 
     private fun switchToHomeFragment(uid: String, uname:String?, uphoto: Uri?) {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid, uname, uphoto))
         ft.commit()
+    }
+
+    override fun onLoginButtonPressed() {
+        launchLoginUI()
+    }
+
+    private fun launchLoginUI() {
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.PhoneBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build())
+        val loginIntent =  AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .build()
+        startActivityForResult(loginIntent, RC_SIGN_IN)
+    }
+
+    override fun OnHomeFragmentInteraction() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onFragmentInteraction(mr: MatchResult) {

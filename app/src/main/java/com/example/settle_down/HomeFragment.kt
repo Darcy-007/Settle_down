@@ -16,6 +16,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.enter_room_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +38,7 @@ private const val ARG_UPHOTO = "UPHOTO"
  */
 class HomeFragment : Fragment() {
     private var uid: String? = null
+    private val auth = FirebaseAuth.getInstance()
     private var uname: String? = null
     private var uphoto: Uri? = null
     //    private var param2: String? = null
@@ -108,6 +113,10 @@ class HomeFragment : Fragment() {
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.show()
         }
+        view.imageView.setOnClickListener {
+            Log.d(Constants.TAG, "I'm pressed")
+            auth.signOut()
+        }
         return view
     }
 
@@ -115,7 +124,7 @@ class HomeFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnHomeFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -138,7 +147,7 @@ class HomeFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface OnHomeFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(mr:MatchResult)
     }
