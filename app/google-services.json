@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "380310050666",
+    "firebase_url": "https://settle-down-b5ae4.firebaseio.com",
+    "project_id": "settle-down-b5ae4",
+    "storage_bucket": "settle-down-b5ae4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380310050666:android:b8cb2ff8ab48c9f2e23713",
+        "android_client_info": {
+          "package_name": "com.example.settle_down"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380310050666-782abffprpa9988bc9ofvvq7ttrqrur8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.settle_down",
+            "certificate_hash": "6c4075a17d6bfe5a355a85bb216080e5f07b07c7"
+          }
+        },
+        {
+          "client_id": "380310050666-la5ik71pigjqml8233sirioep5cuku0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjdZZndti1GcGTrPRHFRKrRDGwFMgnn6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380310050666-la5ik71pigjqml8233sirioep5cuku0c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
