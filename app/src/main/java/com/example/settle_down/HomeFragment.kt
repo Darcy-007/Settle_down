@@ -20,6 +20,8 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import android.graphics.drawable.Drawable
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -96,8 +98,17 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        view.imageView.setImageURI(uphoto)
-        view.home_head.text=uname
+//        if(uphoto == null){
+//            Log.d(Constants.TAG, "!!!!!")
+//            view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
+//        }else{
+//            view.imgView.setImageDrawable(Drawable.createFromStream(
+//                getContent().openInputStream(uphoto),
+//                null));
+//            Log.d(Constants.TAG, "!!!!!"+uphoto)
+////            view.imageView.setImageURI(uphoto)
+//        }
+        view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
         view.home_button.setOnClickListener {
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle("Enter Your Code Here")
@@ -124,7 +135,7 @@ class HomeFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnHomeFragmentInteractionListener) {
+        if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -147,7 +158,7 @@ class HomeFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnHomeFragmentInteractionListener {
+    interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(mr:MatchResult)
     }
