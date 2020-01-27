@@ -26,6 +26,9 @@ android {
             multiDexEnabled true
         }
     }
+    androidExtensions{
+        experimental = true
+    }
 }
 
 dependencies {
