@@ -5,11 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.firebase.ui.auth.AuthUI
+import com.example.settle_down.Models.MatchResult
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedListener, HomeFragment.OnHomeFragmentInteractionListener {
 
+class MainActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionListener {
     private val auth = FirebaseAuth.getInstance()
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     private val RC_SIGN_IN = 1
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedLi
                 Log.d(Constants.TAG, "Email: ${user.email}")
                 Log.d(Constants.TAG, "Phone: ${user.phoneNumber}")
                 Log.d(Constants.TAG, "Photo URL: ${user.photoUrl}")
-                switchToHomeFragment(user.uid)
+                switchToHomeFragment(user.uid, user.displayName, user.photoUrl)
             }else{
                 switchToStartingFragment()
             }
@@ -64,9 +65,9 @@ class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedLi
         ft.commit()
     }
 
-    private fun switchToHomeFragment(uid: String) {
+    private fun switchToHomeFragment(uid: String, uname:String?, uphoto: Uri?) {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid))
+        ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid, uname, uphoto))
         ft.commit()
     }
 
@@ -87,6 +88,10 @@ class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedLi
 
     override fun OnHomeFragmentInteraction() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onFragmentInteraction(mr: MatchResult) {
+        Log.d("mr", mr.toString())
     }
 
 }
