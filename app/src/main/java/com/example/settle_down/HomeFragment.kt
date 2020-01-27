@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import android.graphics.drawable.Drawable
+import com.example.settle_down.Models.CodingGame
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -52,25 +53,35 @@ class HomeFragment : Fragment() {
 
 
     private fun waitOrJoin(code:String){
+        var challenger = true
         ref.get().addOnSuccessListener {
-            for(mr in it){
+            for (mr in it) {
                 var matchtemp = mr.toObject(MatchResult::class.java)
-                if(matchtemp.Code==code&&!matchtemp.isComplete) {
+                Log.d("!!!!!!!!!!!!", matchtemp.toString())
+                if (matchtemp.Code == code && !matchtemp.isComplete) {
                     matchtemp.isComplete = true
-                    matchtemp.Receiver=uname!!
+                    matchtemp.Receiver = "receiver"
                     listener?.onFragmentInteraction(matchtemp)
+                    challenger = false
                 }
             }
-            var match: MatchResult = MatchResult(uname!!, 0,
-                code, "", MathGame(), "", 0, "", false)
+        }
+        if(challenger==true){
+            Log.d("???????????", uname)
+
+            var match: MatchResult = MatchResult("challenger", 0,
+                code, "", 0, "", 0, "", false)
+            Log.d("???????????", match.toString())
             ref.add(match)
+            Log.d("???????????", match.toString())
+
             ref.addSnapshotListener{ querySnapshot, firebaseFirestoreException ->
                 if(firebaseFirestoreException!=null){
                     Log.e("error", "Listen error: $firebaseFirestoreException")
                 }
                 for(docChange in querySnapshot!!.documentChanges){
                     val change = MatchResult.matchResultFromSnapshot(docChange.document)
-                    if(change.Code==code&&change.Challenger==uname!!&&change.Winner.isEmpty()) {
+                    if(change.Code==code&&change.Challenger=="challenger"&&change.Winner.isEmpty()) {
                         when (docChange.type) {
                             DocumentChange.Type.MODIFIED -> {
                                 listener?.onFragmentInteraction(change)

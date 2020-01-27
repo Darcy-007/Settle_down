@@ -10,14 +10,14 @@ data class MatchResult(
     val ChallengerScore: Int = 1,
     val Code: String = "",
     val EventResolved: String = "",
-    val GameType: Game = MathGame(),
+    val GameType: Int = 0,
     var Receiver: String = "",
     val ReceiverScore: Int = 0,
     val Winner: String = "",
     var isComplete: Boolean = false
     ){
     @get:Exclude var id = ""
-    @ServerTimestamp var Date: Timestamp? = null
+//    @ServerTimestamp var Date: Timestamp? = null
     companion object {
         const val LAST_TOUCHED_KEY = "lastTouched"
 
