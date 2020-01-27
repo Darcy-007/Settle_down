@@ -5,4 +5,7 @@
     <string name="first_page_question">Have you played this game before?</string>
     <string name="first_page_negative_button_text">No, This is my first time</string>
     <string name="first_page_positive_button_text">Yes, I have my account</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
