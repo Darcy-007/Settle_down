@@ -98,8 +98,12 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
-    override fun onWaitingFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onWaitingFragmentInteraction(isChallenger: Boolean) {
+        if(isChallenger){
+            val ft = supportFragmentManager.beginTransaction()
+            ft.replace(R.id.fragment_container, HomeFragment.newInstance(user))
+            ft.commit()
+        }
     }
 
 }

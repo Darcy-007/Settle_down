@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter The Four Digit Code here"
-        android:inputType="textCapWords"
+        android:inputType="number"
         android:textSize="24sp"
         android:importantForAutofill="no"
         />

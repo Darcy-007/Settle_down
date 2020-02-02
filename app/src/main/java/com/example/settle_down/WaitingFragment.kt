@@ -29,7 +29,7 @@ private const val ARG_ISCHALLENGER = "param2"
 class WaitingFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var mr: MatchResult? = null
-    private var isChalllenger: Boolean? =null
+    private var isChalllenger: Boolean? = null
     private var listener: OnWaitingFragmentInteractionListener? = null
     private val ref = FirebaseFirestore
         .getInstance()
@@ -41,25 +41,29 @@ class WaitingFragment : Fragment() {
             mr = it.getParcelable(ARG_PARAM1)
             isChalllenger = it.getBoolean(ARG_ISCHALLENGER)
         }
-    }
-
-    init{
-        if(mr!!.receiver.isEmpty()) {
-            ref.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                if (firebaseFirestoreException != null) {
-                    Log.e("error", "Listen error: $firebaseFirestoreException")
-                }
-                for (docChange in querySnapshot!!.documentChanges) {
-                    val change = MatchResult.matchResultFromSnapshot(docChange.document)
-                    if (change.code == mr!!.code && change.challenger.isNotEmpty() && change.winner.isEmpty()) {
-                        when (docChange.type) {
-                            DocumentChange.Type.MODIFIED -> {
-                                waitingMsg.text = "Found Player, Loading Your Game Selection Page"
+        ref.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            if (firebaseFirestoreException != null) {
+                Log.e("error", "Listen error: $firebaseFirestoreException")
+            }
+            for (docChange in querySnapshot!!.documentChanges) {
+                val change = MatchResult.matchResultFromSnapshot(docChange.document)
+                if (change.code == mr!!.code && change.challenger.isNotEmpty() && change.winner.isEmpty()) {
+                    when (docChange.type) {
+                        DocumentChange.Type.MODIFIED -> {
+                            if (isChalllenger!!) {
+                                waitingMsg.text =
+                                    "Found player, now loading game choose page"
+                                listener?.onWaitingFragmentInteraction(isChalllenger!!)
+                            } else {
+                                waitingMsg.text =
+                                    "A game has been chose, loading"
+                                listener?.onWaitingFragmentInteraction(isChalllenger!!)
                             }
                         }
                     }
                 }
             }
+
         }
     }
 
@@ -68,12 +72,13 @@ class WaitingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_waiting, container, false)
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onWaitingFragmentInteraction(uri)
+        val view = inflater.inflate(R.layout.fragment_waiting, container, false)
+        if (isChalllenger!!) {
+            waitingMsg.text = "Waiting for the other player to join your game"
+        } else {
+            waitingMsg.text = "Found Game, now waiting for the host to pick a settle down game"
+        }
+        return view
     }
 
     override fun onAttach(context: Context) {
@@ -103,7 +108,7 @@ class WaitingFragment : Fragment() {
      */
     interface OnWaitingFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onWaitingFragmentInteraction(uri: Uri)
+        fun onWaitingFragmentInteraction(isChalllenger: Boolean)
     }
 
     companion object {
@@ -117,7 +122,7 @@ class WaitingFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(mr: MatchResult, isChalllenger:Boolean) =
+        fun newInstance(mr: MatchResult, isChalllenger: Boolean) =
             WaitingFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_PARAM1, mr)
