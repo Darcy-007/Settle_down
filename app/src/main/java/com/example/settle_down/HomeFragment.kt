@@ -54,27 +54,28 @@ class HomeFragment : Fragment() {
     private fun waitOrJoin(code:String){
         var challenger = true
 
-        ref.get().addOnSuccessListener {snapshot: QuerySnapshot ->
+        ref.get().addOnCompleteListener{
             Log.d("code", code)
-            for (mr in snapshot) {
+            for (mr in it.result!!.documents) {
                 var matchtemp = mr.toObject(MatchResult::class.java)
-                if (matchtemp.code == code && !matchtemp.isComplete) {
-                    matchtemp.isComplete = true
-                    matchtemp.receiver = "receiver"
+                if (matchtemp!!.code == code && !matchtemp.complete) {
+                    Log.d("inhome", matchtemp.toString())
+                    matchtemp.complete = true
+                    matchtemp.receiver = uname!!
                     ref.document(mr.id).set(matchtemp)
                     listener?.onHomeFragmentInteraction(matchtemp, false)
                     challenger = false
-
                 }
             }
-        }
-        if(challenger){
+            if(challenger){
 
-            var match: MatchResult = MatchResult(uname!!, 0,
-                code, "", 0, "", 0, "", false)
-            ref.add(match)
-            listener?.onHomeFragmentInteraction(match, true)
+                var match: MatchResult = MatchResult(uname!!, 0,
+                    code, false, "", -1, "", 0, "")
+                ref.add(match)
+                listener?.onHomeFragmentInteraction(match, true)
+            }
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

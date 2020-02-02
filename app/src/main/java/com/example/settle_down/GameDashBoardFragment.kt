@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.settle_down.Models.MatchResult
+import com.example.settle_down.Models.*
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.fragment_game_dash_board.view.*
 
 private const val ARG_PARAM1 = "gdb"
 /**
@@ -20,8 +22,10 @@ private const val ARG_PARAM1 = "gdb"
  */
 class GameDashBoardFragment : Fragment() {
     private var mr: MatchResult? = null
-    private var listener: OnFragmentInteractionListener? = null
-
+    private var listener: OnGameDashboardFragmentInteractionListener? = null
+    private val ref = FirebaseFirestore
+        .getInstance()
+        .collection("MatchResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -33,17 +37,40 @@ class GameDashBoardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_game_dash_board, container, false)
+        val view = inflater.inflate(R.layout.fragment_game_dash_board, container, false)
+        view.game_dashboard_math.setOnClickListener {
+            mr?.gameType=Constants.mathgame
+            ref.document(mr!!.id).set(mr!!)
+            var game = MathGame()
+            listener?.onGameDashboardFragmentInteraction(mr, game)
+        }
+        view.game_dashboard_computer.setOnClickListener {
+            mr?.gameType=Constants.codinggame
+            ref.document(mr!!.id).set(mr!!)
+            var game = CodingGame()
+            listener?.onGameDashboardFragmentInteraction(mr, game)
+        }
+        view.game_dashboard_typing.setOnClickListener {
+            mr?.gameType=Constants.typegame
+            ref.document(mr!!.id).set(mr!!)
+            var game = TypeGame()
+            listener?.onGameDashboardFragmentInteraction(mr, game)
+        }
+        view.game_dashboard_dice.setOnClickListener {
+            mr?.gameType=Constants.dicegame
+            ref.document(mr!!.id).set(mr!!)
+            var game = DiceGame()
+            listener?.onGameDashboardFragmentInteraction(mr, game)
+        }
+
+        return view
+
     }
 
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnGameDashboardFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -66,8 +93,8 @@ class GameDashBoardFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+    interface OnGameDashboardFragmentInteractionListener {
+        fun onGameDashboardFragmentInteraction(mr:MatchResult?, game: Game)
     }
 
     companion object {

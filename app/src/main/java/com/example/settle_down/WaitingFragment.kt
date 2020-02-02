@@ -12,6 +12,7 @@ import com.example.settle_down.Models.MatchResult
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_waiting.*
+import kotlinx.android.synthetic.main.fragment_waiting.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,6 +42,15 @@ class WaitingFragment : Fragment() {
             mr = it.getParcelable(ARG_PARAM1)
             isChalllenger = it.getBoolean(ARG_ISCHALLENGER)
         }
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_waiting, container, false)
         ref.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
             if (firebaseFirestoreException != null) {
                 Log.e("error", "Listen error: $firebaseFirestoreException")
@@ -50,14 +60,15 @@ class WaitingFragment : Fragment() {
                 if (change.code == mr!!.code && change.challenger.isNotEmpty() && change.winner.isEmpty()) {
                     when (docChange.type) {
                         DocumentChange.Type.MODIFIED -> {
+                            Log.d("inwaiting", change.toString())
                             if (isChalllenger!!) {
-                                waitingMsg.text =
+                                view.waitingMsg.text =
                                     "Found player, now loading game choose page"
-                                listener?.onWaitingFragmentInteraction(isChalllenger!!)
+                                listener?.onWaitingFragmentInteraction(isChalllenger, change)
                             } else {
-                                waitingMsg.text =
+                                view.waitingMsg.text =
                                     "A game has been chose, loading"
-                                listener?.onWaitingFragmentInteraction(isChalllenger!!)
+                                listener?.onWaitingFragmentInteraction(isChalllenger, change)
                             }
                         }
                     }
@@ -65,18 +76,10 @@ class WaitingFragment : Fragment() {
             }
 
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_waiting, container, false)
         if (isChalllenger!!) {
-            waitingMsg.text = "Waiting for the other player to join your game"
+            view.waitingMsg.text = "Waiting for the other player to join your game"
         } else {
-            waitingMsg.text = "Found Game, now waiting for the host to pick a settle down game"
+            view.waitingMsg.text = "Found Game, now waiting for the host to pick a settle down game"
         }
         return view
     }
@@ -108,7 +111,7 @@ class WaitingFragment : Fragment() {
      */
     interface OnWaitingFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onWaitingFragmentInteraction(isChalllenger: Boolean)
+        fun onWaitingFragmentInteraction(isChalllenger: Boolean?, mr: MatchResult?)
     }
 
     companion object {

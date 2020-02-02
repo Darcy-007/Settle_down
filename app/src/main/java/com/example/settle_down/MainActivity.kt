@@ -4,15 +4,17 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.settle_down.Models.*
 import com.firebase.ui.auth.AuthUI
-import com.example.settle_down.Models.MatchResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity(),
     StartingFragment.OnLoginButtonPressedListener,
     HomeFragment.OnHomeFragmentInteractionListener,
-    WaitingFragment.OnWaitingFragmentInteractionListener {
+    WaitingFragment.OnWaitingFragmentInteractionListener,
+    GameDashBoardFragment.OnGameDashboardFragmentInteractionListener {
+
 
 
     private val auth = FirebaseAuth.getInstance()
@@ -98,11 +100,38 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
-    override fun onWaitingFragmentInteraction(isChallenger: Boolean) {
-        if(isChallenger){
+    override fun onWaitingFragmentInteraction(isChallenger: Boolean?, mr: MatchResult?) {
+        if(isChallenger!!){
             val ft = supportFragmentManager.beginTransaction()
-            ft.replace(R.id.fragment_container, HomeFragment.newInstance(user))
+            ft.replace(R.id.fragment_container, GameDashBoardFragment.newInstance(mr!!))
             ft.commit()
+        }else{
+            when(mr!!.gameType){
+                0 -> {
+                    Log.d(Constants.TAG, "0")
+                }
+                1 -> {
+                    Log.d(Constants.TAG, "1")
+                }
+                2 -> {
+                    Log.d(Constants.TAG, "2")
+                }
+                3 -> {
+                    Log.d(Constants.TAG, "3")
+                }
+            }
+        }
+    }
+
+    override fun onGameDashboardFragmentInteraction(mr: MatchResult?, game: Game) {
+        if(game is MathGame){
+
+        }else if(game is CodingGame){
+
+        }else if(game is TypeGame){
+
+        }else{
+
         }
     }
 

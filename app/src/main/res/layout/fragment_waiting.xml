@@ -23,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Waiting for people to join your game..."
+        android:textAlignment="center"
         android:layout_below="@id/progressBar"
         android:layout_centerHorizontal="true"
         android:id="@+id/waitingMsg"
