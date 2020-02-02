@@ -24,7 +24,7 @@ private const val ARG_PARAM2 = "ISC"
 class CodingGameFragment : Fragment() {
     private var mr: MatchResult? = null
     private var isChallenger: Boolean? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnCodingGameFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,13 +42,10 @@ class CodingGameFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_coding_game, container, false)
     }
 
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnCodingGameFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -71,8 +68,8 @@ class CodingGameFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+    interface OnCodingGameFragmentInteractionListener {
+        fun onCodingGameFragmentInteraction()
     }
 
     companion object {

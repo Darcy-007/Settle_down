@@ -13,8 +13,8 @@ class MainActivity : AppCompatActivity(),
     StartingFragment.OnLoginButtonPressedListener,
     HomeFragment.OnHomeFragmentInteractionListener,
     WaitingFragment.OnWaitingFragmentInteractionListener,
-    GameDashBoardFragment.OnGameDashboardFragmentInteractionListener {
-
+    GameDashBoardFragment.OnGameDashboardFragmentInteractionListener,
+    CodingGameFragment.OnCodingGameFragmentInteractionListener{
 
 
     private val auth = FirebaseAuth.getInstance()
@@ -140,6 +140,10 @@ class MainActivity : AppCompatActivity(),
 
         }
         ft.commit()
+    }
+
+    override fun onCodingGameFragmentInteraction() {
+
     }
 
 }

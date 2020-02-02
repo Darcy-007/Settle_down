@@ -71,8 +71,9 @@ class HomeFragment : Fragment() {
 
                 var match: MatchResult = MatchResult(uname!!, 0,
                     code, false, "", -1, "", 0, "")
-                ref.add(match)
-                listener?.onHomeFragmentInteraction(match, true)
+                ref.add(match).addOnSuccessListener {
+                    listener?.onHomeFragmentInteraction(match, true)
+                }
             }
         }
 
