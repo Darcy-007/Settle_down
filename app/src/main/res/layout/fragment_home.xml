@@ -18,6 +18,13 @@
         android:layout_marginTop="25dp"
 
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:id="@+id/username"
+        android:text="Username"
+        android:layout_alignRight="@id/imageView"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,6 +47,7 @@
         android:width="200dp"
         android:textColor="@color/colorWhite"
         />
+
 
 
 

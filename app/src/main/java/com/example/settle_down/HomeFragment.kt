@@ -1,6 +1,8 @@
 package com.example.settle_down
 
+import android.app.ProgressDialog
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -16,19 +18,17 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.enter_room_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.QuerySnapshot
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import android.graphics.drawable.Drawable
-import com.example.settle_down.Models.CodingGame
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_UID = "UID"
-private const val ARG_UNAME = "UNAME"
-private const val ARG_UPHOTO = "UPHOTO"
+private const val ARG_U = "U"
+
 //private const val ARG_PARAM2 = "param2"
 
 /**
@@ -40,12 +40,11 @@ private const val ARG_UPHOTO = "UPHOTO"
  * create an instance of this fragment.
  */
 class HomeFragment : Fragment() {
-    private var uid: String? = null
-    private val auth = FirebaseAuth.getInstance()
+    private var user: FirebaseUser? = null
     private var uname: String? = null
-    private var uphoto: Uri? = null
+    private val auth = FirebaseAuth.getInstance()
     //    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnHomeFragmentInteractionListener? = null
 
     private val ref = FirebaseFirestore
         .getInstance()
@@ -54,53 +53,39 @@ class HomeFragment : Fragment() {
 
     private fun waitOrJoin(code:String){
         var challenger = true
-        ref.get().addOnSuccessListener {
-            for (mr in it) {
+
+        ref.get().addOnSuccessListener {snapshot: QuerySnapshot ->
+            Log.d("code", code)
+            for (mr in snapshot) {
                 var matchtemp = mr.toObject(MatchResult::class.java)
-                Log.d("!!!!!!!!!!!!", matchtemp.toString())
-                if (matchtemp.Code == code && !matchtemp.isComplete) {
+                if (matchtemp.code == code && !matchtemp.isComplete) {
                     matchtemp.isComplete = true
-                    matchtemp.Receiver = "receiver"
-                    listener?.onFragmentInteraction(matchtemp)
+                    matchtemp.receiver = "receiver"
+                    ref.document(mr.id).set(matchtemp)
+                    listener?.onHomeFragmentInteraction(matchtemp, false)
                     challenger = false
+
                 }
             }
         }
-        if(challenger==true){
-            Log.d("???????????", uname)
+        if(challenger){
 
-            var match: MatchResult = MatchResult("challenger", 0,
+            var match: MatchResult = MatchResult(uname!!, 0,
                 code, "", 0, "", 0, "", false)
-            Log.d("???????????", match.toString())
             ref.add(match)
-            Log.d("???????????", match.toString())
-
-            ref.addSnapshotListener{ querySnapshot, firebaseFirestoreException ->
-                if(firebaseFirestoreException!=null){
-                    Log.e("error", "Listen error: $firebaseFirestoreException")
-                }
-                for(docChange in querySnapshot!!.documentChanges){
-                    val change = MatchResult.matchResultFromSnapshot(docChange.document)
-                    if(change.Code==code&&change.Challenger=="challenger"&&change.Winner.isEmpty()) {
-                        when (docChange.type) {
-                            DocumentChange.Type.MODIFIED -> {
-                                listener?.onFragmentInteraction(change)
-                            }
-                        }
-                    }
-                }
-            }
+            listener?.onHomeFragmentInteraction(match, true)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         arguments?.let {
-            uid = it.getString(ARG_UID)
-            uname = it.getString(ARG_UNAME)
-            uphoto = it.getParcelable(ARG_UPHOTO)
-//            param2 = it.getString(ARG_PARAM2)
+            user = it.getParcelable(ARG_U)
         }
+        if(user!!.displayName != null) uname = user!!.displayName else uname = user!!.phoneNumber
+
+
     }
 
     override fun onCreateView(
@@ -109,17 +94,19 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-//        if(uphoto == null){
-//            Log.d(Constants.TAG, "!!!!!")
-//            view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
-//        }else{
-//            view.imgView.setImageDrawable(Drawable.createFromStream(
-//                getContent().openInputStream(uphoto),
-//                null));
-//            Log.d(Constants.TAG, "!!!!!"+uphoto)
-////            view.imageView.setImageURI(uphoto)
-//        }
-        view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
+        if(user!!.photoUrl == null){
+            Log.d(Constants.TAG, "!!!!!")
+            view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
+        }else{
+            Picasso.get()
+                .load(user!!.photoUrl)
+//                .resize(30,30)
+////                .onlyScaleDown()
+//            .fit()
+                .into(view.imageView)
+        }
+        view.username.text = uname
+//        view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
         view.home_button.setOnClickListener {
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle("Enter Your Code Here")
@@ -146,7 +133,7 @@ class HomeFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnHomeFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -169,9 +156,9 @@ class HomeFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface OnHomeFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onFragmentInteraction(mr:MatchResult)
+        fun onHomeFragmentInteraction(mr:MatchResult, isChallenger: Boolean)
     }
 
     companion object {
@@ -185,12 +172,11 @@ class HomeFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(uid: String, uname:String?, uphoto:Uri?) =
+        fun newInstance(user:FirebaseUser) =
             HomeFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_UID, uid)
-                    putString(ARG_UNAME, uname)
-                    putParcelable(ARG_UPHOTO, uphoto)
+                    putParcelable(ARG_U, user)
+
                 }
             }
     }

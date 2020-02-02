@@ -7,8 +7,14 @@ import android.util.Log
 import com.firebase.ui.auth.AuthUI
 import com.example.settle_down.Models.MatchResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
-class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedListener, HomeFragment.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity(),
+    StartingFragment.OnLoginButtonPressedListener,
+    HomeFragment.OnHomeFragmentInteractionListener,
+    WaitingFragment.OnWaitingFragmentInteractionListener {
+
+
     private val auth = FirebaseAuth.getInstance()
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     private val RC_SIGN_IN = 1
@@ -49,7 +55,7 @@ class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedLi
                 Log.d(Constants.TAG, "Email: ${user.email}")
                 Log.d(Constants.TAG, "Phone: ${user.phoneNumber}")
                 Log.d(Constants.TAG, "Photo URL: ${user.photoUrl}")
-                switchToHomeFragment(user.uid, user.displayName, user.photoUrl)
+                switchToHomeFragment(user)
             }else{
                 switchToStartingFragment()
             }
@@ -63,9 +69,10 @@ class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedLi
         ft.commit()
     }
 
-    private fun switchToHomeFragment(uid: String, uname:String?, uphoto: Uri?) {
+
+    private fun switchToHomeFragment(user: FirebaseUser) {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, HomeFragment.newInstance(uid, uname, uphoto))
+        ft.replace(R.id.fragment_container, HomeFragment.newInstance(user))
         ft.commit()
     }
 
@@ -85,8 +92,14 @@ class MainActivity : AppCompatActivity(),StartingFragment.OnLoginButtonPressedLi
     }
 
 
-    override fun onFragmentInteraction(mr: MatchResult) {
-        Log.d("mr", mr.toString())
+    override fun onHomeFragmentInteraction(mr: MatchResult, isChallenger: Boolean) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, WaitingFragment.newInstance(mr, isChallenger))
+        ft.commit()
+    }
+
+    override fun onWaitingFragmentInteraction(uri: Uri) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }
