@@ -106,33 +106,40 @@ class MainActivity : AppCompatActivity(),
             ft.replace(R.id.fragment_container, GameDashBoardFragment.newInstance(mr!!))
             ft.commit()
         }else{
+            val ft = supportFragmentManager.beginTransaction()
+
             when(mr!!.gameType){
-                0 -> {
+                Constants.mathgame -> {
                     Log.d(Constants.TAG, "0")
                 }
-                1 -> {
+                Constants.codinggame -> {
                     Log.d(Constants.TAG, "1")
+                    ft.replace(R.id.fragment_container, CodingGameFragment.newInstance(mr!!, false))
                 }
-                2 -> {
+                Constants.typegame -> {
                     Log.d(Constants.TAG, "2")
                 }
-                3 -> {
+                Constants.dicegame -> {
                     Log.d(Constants.TAG, "3")
                 }
             }
+            ft.commit()
         }
     }
 
     override fun onGameDashboardFragmentInteraction(mr: MatchResult?, game: Game) {
+        val ft = supportFragmentManager.beginTransaction()
+
         if(game is MathGame){
 
         }else if(game is CodingGame){
-
+            ft.replace(R.id.fragment_container, CodingGameFragment.newInstance(mr!!, true))
         }else if(game is TypeGame){
 
         }else{
 
         }
+        ft.commit()
     }
 
 }
