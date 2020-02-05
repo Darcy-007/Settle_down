@@ -1,3 +1,9 @@
+import android.util.Log
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.random.Random
+
 //package com.example.settle_down
 //
 //import com.google.firebase.firestore.CollectionReference
@@ -20,3 +26,10 @@
 //                    quotesRef.add(movieQuote)
 //                } ...
 //            }
+
+object FirestoreDataManager {
+    var typingGameRef = FirebaseFirestore
+        .getInstance()
+        .collection("TypeGame")
+
+}

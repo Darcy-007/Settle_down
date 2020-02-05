@@ -1,9 +1,9 @@
 package com.example.settle_down
 
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.settle_down.GameFragments.CodingGameFragment
 import com.example.settle_down.Models.*
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth

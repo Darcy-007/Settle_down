@@ -67,6 +67,7 @@ class HomeFragment : Fragment() {
                     challenger = false
                 }
             }
+
             if(challenger){
 
                 var match: MatchResult = MatchResult(uname!!, 0,
