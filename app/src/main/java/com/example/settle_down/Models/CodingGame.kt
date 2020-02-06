@@ -11,12 +11,12 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class CodingGame(
-    val Answer: Int = 0,
-    val Choice1: String = "",
-    val Choice2: String = "",
-    val Choice3: String = "",
-    val Choice4: String = "",
-    val Problem: String = ""
+    val answer: Int = 0,
+    val choice1: String = "",
+    val choice2: String = "",
+    val choice3: String = "",
+    val choice4: String = "",
+    val problem: String = ""
 ):Parcelable, Game{
     @get:Exclude var id = ""
     companion object {

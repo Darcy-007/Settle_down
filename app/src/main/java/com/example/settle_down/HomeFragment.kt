@@ -89,6 +89,7 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
                     ref.document(mr.id).set(matchtemp)
                     listener?.onHomeFragmentInteraction(matchtemp, false)
                     challenger = false
+                    break
                 }
             }
 

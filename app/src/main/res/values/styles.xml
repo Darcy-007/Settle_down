@@ -25,6 +25,15 @@
     <style name="ProgressBarStyle">
         <item name="colorAccent">@color/colorSdGreen</item>
     </style>
+    <style name="button_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_alignLeft">@id/coding_len</item>
+        <item name="android:layout_marginEnd">55dp</item>
+    </style>
 
 
 

@@ -19,7 +19,7 @@ data class MatchResult(
     var receiver: String = "",
     var receiverScore: Int = 0,
     var winner: String = "",
-    var gameId: String = ""
+    var gameId: ArrayList<String>? = null
     ): Parcelable {
     @get:Exclude var id = ""
 //    @ServerTimestamp var Date: Timestamp? = null
