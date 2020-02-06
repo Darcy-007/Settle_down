@@ -22,9 +22,10 @@ class MainActivity : AppCompatActivity(),
     GameDashBoardFragment.OnGameDashboardFragmentInteractionListener,
     CodingGameFragment.OnCodingGameFragmentInteractionListener,
     TypingGameFragment.OnTypingGameFragmentInteractionListener {
-    override fun onTypingGameFragmentInteraction(uri: Uri) {
+    override fun onTypingGameFragmentInteraction() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 
 
     private val auth = FirebaseAuth.getInstance()
@@ -52,6 +53,16 @@ class MainActivity : AppCompatActivity(),
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
         view.setOnKeyListener { v, keyCode, event ->
             Log.d("CODE!!!!", keyCode.toString())
+            true
+        }
+    }
+    override fun showTestSoftKeyboard(view: View) {
+        Log.d("KEYBOARD", "Show")
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        view.requestFocus()
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        view.setOnKeyListener { v, keyCode, event ->
+//            Log.d("CODE!!!!", keyCode.toString())
             true
         }
     }

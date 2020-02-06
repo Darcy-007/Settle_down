@@ -28,7 +28,7 @@
         <TextView
             android:id="@+id/TypingProblem"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/TypingTitle"
             android:layout_centerInParent="true"
             android:text="@string/hello_blank_fragment"
@@ -36,9 +36,17 @@
             android:layout_margin="5dp"
             android:textSize="18sp" />
         <EditText
+            android:id="@+id/TypingGameUserInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="input text"
+            android:hint="Enter The Sentences Above"
+            android:inputType="textFilter|textMultiLine"
+            android:textSize="24sp"
+            android:layout_below="@+id/TypingProblem"
+            android:importantForAutofill="no"
+            android:scrollHorizontally="false"
+            />
+
 
 <!--        <RelativeLayout-->
 <!--            android:layout_width="match_parent"-->

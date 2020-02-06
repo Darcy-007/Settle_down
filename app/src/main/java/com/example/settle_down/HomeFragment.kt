@@ -42,27 +42,8 @@ private const val ARG_U = "U"
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeFragment : Fragment(), KeyEvent.Callback {
-    override fun onKeyMultiple(keyCode: Int, count: Int, event: KeyEvent?): Boolean {
-        Log.d("Presssssss",keyCode.toString())
-        return true
-    }
+class HomeFragment : Fragment(){
 
-    override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
-        return true
-
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        Log.d("Presssssss",keyCode.toString())
-        return true
-
-    }
-
-    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        Log.d("Presssssss",keyCode.toString())
-        return true
-    }
 
     private var user: FirebaseUser? = null
     private var uname: String? = null
@@ -85,7 +66,7 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
                 if (matchtemp!!.code == code && !matchtemp.complete) {
                     Log.d("inhome", matchtemp.toString())
                     matchtemp.complete = true
-                    matchtemp.receiver = uname!!
+                    matchtemp.receiver = user!!.uid
                     ref.document(mr.id).set(matchtemp)
                     listener?.onHomeFragmentInteraction(matchtemp, false)
                     challenger = false
@@ -95,8 +76,8 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
 
             if(challenger){
 
-                var match: MatchResult = MatchResult(uname!!, 0,
-                    code, false, "", -1, "", 0, "", "")
+                var match: MatchResult = MatchResult(user!!.uid, 0,
+                    code, false, "", -1, "", 0, "", ArrayList())
                 ref.add(match).addOnSuccessListener {
                     listener?.onHomeFragmentInteraction(match, true)
                 }
@@ -139,15 +120,12 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
 //            Log.d("CODE!!!!", keyCode.toString())
 //            true
 //        }
-//        view.username.setOnClickListener {
-//            listener!!.showSoftKeyboard(view)
-//        }
+
 
 
 //        view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
         view.home_button.setOnClickListener {
             Log.d("AFTER" ,"Fine")
-//            listener!!.showSoftKeyboard(view)
 
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle("Enter Your Code Here")
@@ -163,10 +141,7 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
             builder.setNegativeButton(android.R.string.cancel, null)
 //            builder.setOnClickListener {
 //            }
-//            builder.setOnKeyListener { v, keyCode, event ->
-//                Log.d("CODE!!!!", keyCode.toString())
-//                true
-//            }
+
             builder.show()
         }
         view.imageView.setOnClickListener {
@@ -207,7 +182,7 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
     interface OnHomeFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onHomeFragmentInteraction(mr:MatchResult, isChallenger: Boolean)
-
+        fun showTestSoftKeyboard(view: View)
     }
 
     companion object {

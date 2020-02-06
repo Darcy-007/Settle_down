@@ -1,9 +1,11 @@
 package com.example.settle_down.GameFragments
 
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,14 @@ import com.example.settle_down.R
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_typing_game.view.*
 import kotlin.random.Random
+import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import com.google.firebase.firestore.DocumentChange
+import kotlinx.android.synthetic.main.fragment_waiting.view.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,6 +40,11 @@ private const val IC = "IC"
  * create an instance of this fragment.
  */
 class TypingGameFragment : Fragment() {
+
+
+    private val ref = FirebaseFirestore
+        .getInstance()
+        .collection("MatchResult")
     // TODO: Rename and change types of parameters
     private var mr: MatchResult? = null
     private var isChallenger: Boolean? = null
@@ -45,7 +60,25 @@ class TypingGameFragment : Fragment() {
 //            param1 = it.getString(ARG_PARAM1)
 //            param2 = it.getString(ARG_PARAM2)
         }
+
+        ref.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            if (firebaseFirestoreException != null) {
+                Log.e("error", "Listen error: $firebaseFirestoreException")
+            }
+            for (docChange in querySnapshot!!.documentChanges) {
+                val change = MatchResult.matchResultFromSnapshot(docChange.document)
+                if (change.code == mr!!.code && change.challenger.isNotEmpty() && change.winner.isEmpty()) {
+                    when (docChange.type) {
+                        DocumentChange.Type.MODIFIED -> {
+                            listener!!.onTypingGameFragmentInteraction()
+                        }
+                    }
+                }
+            }
+
+        }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,19 +91,75 @@ class TypingGameFragment : Fragment() {
         FirebaseFirestore
             .getInstance()
             .collection("TypeGame")
-            .document(mr!!.gameId)
+            .document(mr!!.gameId!![0])
             .get()
             .addOnSuccessListener {
-            val game = it.toObject(TypeGame::class.java)
-            view.TypingProblem.text = game!!.Problem
-            view.TypingProblem.setOnClickListener {
-                listener!!.showSoftKeyboard(view)
-            }
-                view.TypingProblem.setOnKeyListener { v, keyCode, event ->
-                    Log.d("KEYDOWN", keyCode.toString())
-                    false
+                val game = it.toObject(TypeGame::class.java)
+                view.TypingProblem.text = game!!.Problem
+//            view.TypingProblem.setOnClickListener {
+//                listener!!.showSoftKeyboard(view)
+//            }
+//                view.TypingProblem.setOnKeyListener(this)
+                var problem = game!!.Problem
+                var currentProgress = ""
+                var currentIndex = 0
+                val filterTextWatcher = object : TextWatcher {
+                    override fun onTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        Log.d("EDITTEXTTTTTT", s.toString())
+                        currentProgress = s.toString()
+                        val spannable = SpannableString(problem)
+                        if (currentProgress == problem) {
+                            Log.d("YES!!!!!", "DONE!!!!!")
+                            listener!!.onTypingGameFragmentInteraction()
+                            if(isChallenger!!){
+                                mr!!.challengerScore=1
+                                mr!!.winner = mr!!.challenger
+                                mr!!.complete = true
+                            }else{
+                                mr!!.receiverScore=1
+                                mr!!.winner = mr!!.receiver
+                                mr!!.complete = true
+                            }
+                            FirestoreDataManager.typingGameRef.document(mr!!.id).set(mr!!).addOnSuccessListener {
+                                listener!!.onTypingGameFragmentInteraction()
+                            }
+                        }
+                        for (i in currentProgress.indices) {
+                            if (problem.get(i) != currentProgress.get(i)) {
+                                spannable.setSpan(
+                                    ForegroundColorSpan(Color.RED),
+                                    i, i + 1,
+                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                                )
+                            } else {
+                                spannable.setSpan(
+                                    ForegroundColorSpan(Color.rgb(103, 161, 98)),
+                                    i, i + 1,
+                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                                )
+                            }
+                        }
+                        view.TypingProblem.text = spannable
+                    }
+
+                    override fun beforeTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun afterTextChanged(s: Editable) {}
                 }
-        }
+                view.TypingGameUserInput.addTextChangedListener(filterTextWatcher)
+
+            }
         return view
     }
 
@@ -101,8 +190,9 @@ class TypingGameFragment : Fragment() {
      */
     interface OnTypingGameFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onTypingGameFragmentInteraction(uri: Uri)
-        fun showSoftKeyboard(view:View)
+        fun onTypingGameFragmentInteraction()
+
+        fun showSoftKeyboard(view: View)
     }
 
     companion object {
