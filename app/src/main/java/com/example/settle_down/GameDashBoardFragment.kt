@@ -51,9 +51,27 @@ class GameDashBoardFragment : Fragment() {
         }
         view.game_dashboard_computer.setOnClickListener {
             mr?.gameType = Constants.codinggame
-            ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
-                var game = CodingGame()
-                listener?.onGameDashboardFragmentInteraction(mr, game)
+//            ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
+//                var game = CodingGame()
+//                listener?.onGameDashboardFragmentInteraction(mr, game)
+//            }
+            FirestoreDataManager.codingingGameRef.get().addOnSuccessListener {
+                var questionlist = ArrayList<String>()
+                while (questionlist.size != 3){
+                    var documentSize = it.documents.size
+                    var nextid = it.documents[Random.nextInt(documentSize)].id
+                    if(!questionlist.contains(nextid)){
+                        questionlist.add(nextid)
+                    }
+                }
+                Log.d(Constants.TAG, questionlist.toString())
+                mr?.gameType = Constants.codinggame
+                mr!!.gameId = questionlist
+                ref.document(mr!!.id).set(mr!!)
+                    .addOnSuccessListener {
+                        listener?.onGameDashboardFragmentInteraction(mr, CodingGame())
+
+                    }
             }
 
         }
@@ -62,7 +80,7 @@ class GameDashBoardFragment : Fragment() {
                 var game = it.documents[Random.nextInt(it.documents.size)].id
                 Log.d("JSJSJJSJSJSJJSJSJSJJS", game)
                 mr?.gameType = Constants.typegame
-                mr!!.gameId = game
+//                mr!!.gameId = game
                 ref.document(mr!!.id).set(mr!!)
                     .addOnSuccessListener {
                         listener?.onGameDashboardFragmentInteraction(mr, TypeGame())

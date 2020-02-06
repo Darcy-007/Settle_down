@@ -96,7 +96,7 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
             if(challenger){
 
                 var match: MatchResult = MatchResult(uname!!, 0,
-                    code, false, "", -1, "", 0, "", "")
+                    code, false, "", -1, "", 0, "", null)
                 ref.add(match).addOnSuccessListener {
                     listener?.onHomeFragmentInteraction(match, true)
                 }
