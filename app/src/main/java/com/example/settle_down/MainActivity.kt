@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(),
                 Constants.typegame -> {
 
                     Log.d(Constants.TAG, "2")
-                    ft.replace(R.id.fragment_container, CodingGameFragment.newInstance(mr!!, false))
+                    ft.replace(R.id.fragment_container, TypingGameFragment.newInstance(mr!!, false))
                 }
                 Constants.dicegame -> {
                     Log.d(Constants.TAG, "3")
@@ -161,7 +161,7 @@ class MainActivity : AppCompatActivity(),
         } else if (game is CodingGame) {
             ft.replace(R.id.fragment_container, CodingGameFragment.newInstance(mr!!, true))
         } else if (game is TypeGame) {
-
+            ft.replace(R.id.fragment_container, TypingGameFragment.newInstance(mr!!, true))
         } else {
 
         }

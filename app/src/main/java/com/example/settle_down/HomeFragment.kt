@@ -95,7 +95,7 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
             if(challenger){
 
                 var match: MatchResult = MatchResult(uname!!, 0,
-                    code, false, "", -1, "", 0, "")
+                    code, false, "", -1, "", 0, "", "")
                 ref.add(match).addOnSuccessListener {
                     listener?.onHomeFragmentInteraction(match, true)
                 }
@@ -138,9 +138,9 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
 //            Log.d("CODE!!!!", keyCode.toString())
 //            true
 //        }
-        view.username.setOnClickListener {
-            listener!!.showSoftKeyboard(view)
-        }
+//        view.username.setOnClickListener {
+//            listener!!.showSoftKeyboard(view)
+//        }
 
 
 //        view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
@@ -206,7 +206,7 @@ class HomeFragment : Fragment(), KeyEvent.Callback {
     interface OnHomeFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onHomeFragmentInteraction(mr:MatchResult, isChallenger: Boolean)
-        fun showSoftKeyboard(view:View)
+
     }
 
     companion object {

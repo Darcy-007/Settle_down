@@ -11,189 +11,189 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/surrender"
+            android:id="@+id/TypingSurrender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SURRENDER" />
 
         <TextView
-            android:id="@+id/Title"
+            android:id="@+id/TypingTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/surrender"
+            android:layout_below="@id/TypingSurrender"
             android:layout_margin="5dp"
-            android:text="Please type the following"
+            android:text="Please click on the text and type"
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/problem"
+            android:id="@+id/TypingProblem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/Title"
+            android:layout_below="@id/TypingTitle"
             android:layout_centerInParent="true"
             android:text="@string/hello_blank_fragment"
             android:textColor="@color/colorBlack"
             android:textSize="18sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="@color/colorLightBlue">
+<!--        <RelativeLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            android:layout_marginRight="20dp"-->
+<!--            android:backgroundTint="@color/colorLightBlue">-->
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:text="1" />
+<!--            <Button-->
+<!--                android:id="@+id/button1"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="1" />-->
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button1"
-                android:text="2" />
+<!--            <Button-->
+<!--                android:id="@+id/button2"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button1"-->
+<!--                android:text="2" />-->
 
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button2"
-                android:text="3" />
+<!--            <Button-->
+<!--                android:id="@+id/button3"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button2"-->
+<!--                android:text="3" />-->
 
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button3"
-                android:text="4" />
+<!--            <Button-->
+<!--                android:id="@+id/button4"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button3"-->
+<!--                android:text="4" />-->
 
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button4"
-                android:text="5" />
+<!--            <Button-->
+<!--                android:id="@+id/button5"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button4"-->
+<!--                android:text="5" />-->
 
-            <Button
-                android:id="@+id/button6"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button5"
-                android:text="6" />
+<!--            <Button-->
+<!--                android:id="@+id/button6"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button5"-->
+<!--                android:text="6" />-->
 
-            <Button
-                android:id="@+id/button7"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button6"
-                android:text="7" />
+<!--            <Button-->
+<!--                android:id="@+id/button7"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button6"-->
+<!--                android:text="7" />-->
 
-            <Button
-                android:id="@+id/button8"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button7"
-                android:text="8" />
+<!--            <Button-->
+<!--                android:id="@+id/button8"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button7"-->
+<!--                android:text="8" />-->
 
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button8"
-                android:text="9" />
+<!--            <Button-->
+<!--                android:id="@+id/button9"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button8"-->
+<!--                android:text="9" />-->
 
-            <Button
-                android:id="@+id/button0"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/button9"
-                android:text="0" />
+<!--            <Button-->
+<!--                android:id="@+id/button0"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/button9"-->
+<!--                android:text="0" />-->
 
-            <Button
-                android:id="@+id/buttonq"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/button1"
-                android:text="q" />
+<!--            <Button-->
+<!--                android:id="@+id/buttonq"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/button1"-->
+<!--                android:text="q" />-->
 
-            <Button
-                android:id="@+id/buttonw"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/button2"
-                android:layout_alignRight="@id/button2"
-                android:text="w" />
+<!--            <Button-->
+<!--                android:id="@+id/buttonw"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/button2"-->
+<!--                android:layout_alignRight="@id/button2"-->
+<!--                android:text="w" />-->
 
-            <Button
-                android:id="@+id/buttone"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/button3"
-                android:layout_alignRight="@id/button3"
-                android:text="e" />
+<!--            <Button-->
+<!--                android:id="@+id/buttone"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/button3"-->
+<!--                android:layout_alignRight="@id/button3"-->
+<!--                android:text="e" />-->
 
-            <Button
-                android:id="@+id/buttonr"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button4"
-                android:layout_alignRight="@id/button4"
-                android:text="r" />
+<!--            <Button-->
+<!--                android:id="@+id/buttonr"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/button4"-->
+<!--                android:layout_alignRight="@id/button4"-->
+<!--                android:text="r" />-->
 
-            <Button
-                android:id="@+id/buttont"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button5"
-                android:layout_alignRight="@id/button5"
-                android:text="t" />
+<!--            <Button-->
+<!--                android:id="@+id/buttont"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/button5"-->
+<!--                android:layout_alignRight="@id/button5"-->
+<!--                android:text="t" />-->
 
-            <Button
-                android:id="@+id/buttony"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button6"
-                android:layout_alignRight="@id/button6"
-                android:text="y" />
+<!--            <Button-->
+<!--                android:id="@+id/buttony"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/button6"-->
+<!--                android:layout_alignRight="@id/button6"-->
+<!--                android:text="y" />-->
 
-            <Button
-                android:id="@+id/buttonu"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button7"
-                android:layout_alignRight="@id/button7"
-                android:text="u" />
+<!--            <Button-->
+<!--                android:id="@+id/buttonu"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/button7"-->
+<!--                android:layout_alignRight="@id/button7"-->
+<!--                android:text="u" />-->
 
-            <Button
-                android:id="@+id/buttoni"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button8"
-                android:layout_alignRight="@id/button8"
-                android:text="i" />
+<!--            <Button-->
+<!--                android:id="@+id/buttoni"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/button8"-->
+<!--                android:layout_alignRight="@id/button8"-->
+<!--                android:text="i" />-->
 
-            <Button
-                android:id="@+id/buttono"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button9"
-                android:layout_alignRight="@id/button9"
-                android:text="o" />
+<!--            <Button-->
+<!--                android:id="@+id/buttono"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/button9"-->
+<!--                android:layout_alignRight="@id/button9"-->
+<!--                android:text="o" />-->
 
-            <Button
-                android:id="@+id/buttonp"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/button0"
-                android:layout_alignRight="@id/button0"
-                android:text="p" />
+<!--            <Button-->
+<!--                android:id="@+id/buttonp"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/button0"-->
+<!--                android:layout_alignRight="@id/button0"-->
+<!--                android:text="p" />-->
 
 
 
-        </RelativeLayout>
+<!--        </RelativeLayout>-->
 
     </RelativeLayout>
 
