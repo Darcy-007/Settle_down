@@ -55,8 +55,6 @@ class TypingGameFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_typing_game, container, false)
 
-        Log.d("HSHSHSHSHHSHSHSHHSHSHS", mr!!.gameId)
-
         FirebaseFirestore
             .getInstance()
             .collection("TypeGame")
@@ -68,7 +66,10 @@ class TypingGameFragment : Fragment() {
             view.TypingProblem.setOnClickListener {
                 listener!!.showSoftKeyboard(view)
             }
-
+                view.TypingProblem.setOnKeyListener { v, keyCode, event ->
+                    Log.d("KEYDOWN", keyCode.toString())
+                    false
+                }
         }
         return view
     }

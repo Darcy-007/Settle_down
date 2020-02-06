@@ -28,12 +28,17 @@
         <TextView
             android:id="@+id/TypingProblem"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@id/TypingTitle"
             android:layout_centerInParent="true"
             android:text="@string/hello_blank_fragment"
             android:textColor="@color/colorBlack"
+            android:layout_margin="5dp"
             android:textSize="18sp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="input text"
 
 <!--        <RelativeLayout-->
 <!--            android:layout_width="match_parent"-->
