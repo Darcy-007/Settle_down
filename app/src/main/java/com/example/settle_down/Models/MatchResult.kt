@@ -27,7 +27,6 @@ data class MatchResult(
         const val LAST_TOUCHED_KEY = "lastTouched"
 
         fun matchResultFromSnapshot(snapshot: DocumentSnapshot): MatchResult {
-            Log.d("snapshot", snapshot.toString())
             val match_result = snapshot.toObject(MatchResult::class.java)!!
             match_result.id = snapshot.id
             return match_result

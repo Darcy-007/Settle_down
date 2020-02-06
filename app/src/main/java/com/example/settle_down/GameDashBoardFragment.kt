@@ -3,6 +3,7 @@ package com.example.settle_down
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +11,10 @@ import android.view.ViewGroup
 import com.example.settle_down.Models.*
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_game_dash_board.view.*
+import kotlin.random.Random
 
 private const val ARG_PARAM1 = "gdb"
+
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
@@ -26,6 +29,7 @@ class GameDashBoardFragment : Fragment() {
     private val ref = FirebaseFirestore
         .getInstance()
         .collection("MatchResult")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -39,14 +43,14 @@ class GameDashBoardFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_game_dash_board, container, false)
         view.game_dashboard_math.setOnClickListener {
-            mr?.gameType=Constants.mathgame
+            mr?.gameType = Constants.mathgame
             ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
                 var game = MathGame()
                 listener?.onGameDashboardFragmentInteraction(mr, game)
             }
         }
         view.game_dashboard_computer.setOnClickListener {
-            mr?.gameType=Constants.codinggame
+            mr?.gameType = Constants.codinggame
             ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
                 var game = CodingGame()
                 listener?.onGameDashboardFragmentInteraction(mr, game)
@@ -54,14 +58,20 @@ class GameDashBoardFragment : Fragment() {
 
         }
         view.game_dashboard_typing.setOnClickListener {
-            mr?.gameType=Constants.typegame
-            ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
-                var game = TypeGame()
-                listener?.onGameDashboardFragmentInteraction(mr, game)
+            FirestoreDataManager.typingGameRef.get().addOnSuccessListener {
+                var game = it.documents[Random.nextInt(it.documents.size)].id
+                Log.d("JSJSJJSJSJSJJSJSJSJJS", game)
+                mr?.gameType = Constants.typegame
+                mr!!.gameId = game
+                ref.document(mr!!.id).set(mr!!)
+                    .addOnSuccessListener {
+                        listener?.onGameDashboardFragmentInteraction(mr, TypeGame())
+
+                    }
             }
         }
         view.game_dashboard_dice.setOnClickListener {
-            mr?.gameType=Constants.dicegame
+            mr?.gameType = Constants.dicegame
             ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
                 var game = DiceGame()
                 listener?.onGameDashboardFragmentInteraction(mr, game)
@@ -99,7 +109,7 @@ class GameDashBoardFragment : Fragment() {
      * for more information.
      */
     interface OnGameDashboardFragmentInteractionListener {
-        fun onGameDashboardFragmentInteraction(mr:MatchResult?, game: Game)
+        fun onGameDashboardFragmentInteraction(mr: MatchResult?, game: Game)
     }
 
     companion object {

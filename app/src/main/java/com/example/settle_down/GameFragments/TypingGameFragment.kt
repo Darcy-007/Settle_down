@@ -3,12 +3,16 @@ package com.example.settle_down.GameFragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.settle_down.Constants
+import com.example.settle_down.Models.MatchResult
 import com.example.settle_down.Models.TypeGame
 import com.example.settle_down.R
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_typing_game.view.*
 import kotlin.random.Random
 
@@ -36,6 +40,8 @@ class TypingGameFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
+            mr = it.getParcelable(MR)
+            isChallenger = it.getBoolean(IC)
 //            param1 = it.getString(ARG_PARAM1)
 //            param2 = it.getString(ARG_PARAM2)
         }
@@ -48,9 +54,21 @@ class TypingGameFragment : Fragment() {
         // Inflate the layout for this fragment
 
         val view = inflater.inflate(R.layout.fragment_typing_game, container, false)
-        FirestoreDataManager.typingGameRef.get().addOnSuccessListener {
-            question = it.documents[Random.nextInt(it.documents.size)].toObject(TypeGame::class.java)
-            view.problem.text = question!!.Problem
+
+        Log.d("HSHSHSHSHHSHSHSHHSHSHS", mr!!.gameId)
+
+        FirebaseFirestore
+            .getInstance()
+            .collection("TypeGame")
+            .document(mr!!.gameId)
+            .get()
+            .addOnSuccessListener {
+            val game = it.toObject(TypeGame::class.java)
+            view.TypingProblem.text = game!!.Problem
+            view.TypingProblem.setOnClickListener {
+                listener!!.showSoftKeyboard(view)
+            }
+
         }
         return view
     }
@@ -83,6 +101,7 @@ class TypingGameFragment : Fragment() {
     interface OnTypingGameFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onTypingGameFragmentInteraction(uri: Uri)
+        fun showSoftKeyboard(view:View)
     }
 
     companion object {
@@ -96,7 +115,7 @@ class TypingGameFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(mr: com.example.settle_down.Models.MatchResult, isChallenger: Boolean) =
+        fun newInstance(mr: MatchResult, isChallenger: Boolean) =
             TypingGameFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(MR, mr)
