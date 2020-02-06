@@ -34,4 +34,7 @@ object FirestoreDataManager {
     var codingingGameRef = FirebaseFirestore
         .getInstance()
         .collection("CodingGame")
+    var matchresultRef = FirebaseFirestore
+        .getInstance()
+        .collection("MatchResult")
 }
