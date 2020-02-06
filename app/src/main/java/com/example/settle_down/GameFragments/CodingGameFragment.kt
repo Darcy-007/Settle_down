@@ -3,6 +3,7 @@ package com.example.settle_down.GameFragments
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,13 @@ import android.widget.Button
 import android.widget.ProgressBar
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
+import com.example.settle_down.Constants
 import com.example.settle_down.Models.MatchResult
 import com.example.settle_down.R
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_coding_game.view.*
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,6 +48,23 @@ class CodingGameFragment : Fragment() {
             mr = it.getParcelable(CG)
             isChallenger = it.getBoolean(ISC)
         }
+    }
+
+    init {
+        FirestoreDataManager.matchresultRef.addSnapshotListener{ snapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                if(firebaseFirestoreException != null){
+                    Log.e(Constants.TAG, "Listen error: $firebaseFirestoreException")
+                    return@addSnapshotListener
+                }
+                for(doChange in snapshot!!.documentChanges){
+                    val match = MatchResult.matchResultFromSnapshot(doChange.document)
+                    when (doChange.type){
+                        DocumentChange.Type.MODIFIED -> {
+                            //Todo: listener for updates
+                        }
+                    }
+                }
+            }
     }
 
     override fun onCreateView(
@@ -78,18 +101,47 @@ class CodingGameFragment : Fragment() {
 
     private fun setOnClicks(view: View){
         view.coding_button0.setOnClickListener {
-
+            onClickHelper(0, view.coding_button0)
+        }
+        view.coding_button1.setOnClickListener {
+            onClickHelper(1, view.coding_button1)
+        }
+        view.coding_button2.setOnClickListener {
+            onClickHelper(2, view.coding_button2)
+        }
+        view.coding_button3.setOnClickListener {
+            onClickHelper(3, view.coding_button3)
         }
     }
 
     private fun onClickHelper(buttonNum:Int, button: Button){
+        var docId = mr!!.id
         if(buttonNum == currentCorrect){
-            var docId = mr!!.gameId!!.get(currentQuestion)
-            button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
-            FirestoreDataManager.codingingGameRef.document(docId).set(mr!!)
+
+            if(isChallenger!!){
+                mr!!.challengerScore += 1
+            }else{
+                mr!!.receiverScore += 1
+            }
+            if(currentQuestion == 2){
+                if(isChallenger!!){
+                    mr!!.winner = mr!!.challenger
+                }else{
+                    mr!!.winner = mr!!.receiver
+                }
+                mr!!.complete = true
+            }
+            button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdGreen))
         }else{
-
-
+            if(currentQuestion == 2){
+                mr!!.complete = true
+            }
+            button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
+        }
+        FirestoreDataManager.codingingGameRef.document(docId).set(mr!!)
+        if(currentQuestion != 2){
+            currentQuestion += 1
+            setProblem(view!!)
         }
     }
 
