@@ -9,12 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.settle_down.Models.TypeGame
 import com.example.settle_down.R
-import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.fragment_typing_game.view.*
 import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
+private const val MR = "MR"
+private const val IC = "IC"
 
 /**
  * A simple [Fragment] subclass.
@@ -26,16 +27,14 @@ import kotlin.random.Random
  */
 class TypingGameFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private var mr: MatchResult? = null
+    private var isChallenger: Boolean? = null
+    private var listener: OnTypingGameFragmentInteractionListener? = null
     private var question: TypeGame? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirestoreDataManager.typingGameRef.get().addOnSuccessListener {
-            question = it.documents[Random.nextInt(it.documents.size)].toObject(TypeGame::class.java)
-        }
+
         arguments?.let {
 //            param1 = it.getString(ARG_PARAM1)
 //            param2 = it.getString(ARG_PARAM2)
@@ -49,17 +48,16 @@ class TypingGameFragment : Fragment() {
         // Inflate the layout for this fragment
 
         val view = inflater.inflate(R.layout.fragment_typing_game, container, false)
+        FirestoreDataManager.typingGameRef.get().addOnSuccessListener {
+            question = it.documents[Random.nextInt(it.documents.size)].toObject(TypeGame::class.java)
+            view.problem.text = question!!.Problem
+        }
         return view
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnTypingGameFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -82,9 +80,9 @@ class TypingGameFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface OnTypingGameFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        fun onTypingGameFragmentInteraction(uri: Uri)
     }
 
     companion object {
@@ -98,11 +96,11 @@ class TypingGameFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(mr: com.example.settle_down.Models.MatchResult, isChallenger: Boolean) =
             TypingGameFragment().apply {
                 arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
+                    putParcelable(MR, mr)
+                    putBoolean(IC, isChallenger)
                 }
             }
     }

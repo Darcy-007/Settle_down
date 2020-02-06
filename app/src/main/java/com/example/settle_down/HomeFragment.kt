@@ -6,11 +6,14 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.settle_down.Models.MatchResult
 import com.example.settle_down.Models.MathGame
 import com.google.firebase.firestore.DocumentChange
@@ -39,7 +42,28 @@ private const val ARG_U = "U"
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), KeyEvent.Callback {
+    override fun onKeyMultiple(keyCode: Int, count: Int, event: KeyEvent?): Boolean {
+        Log.d("Presssssss",keyCode.toString())
+        return true
+    }
+
+    override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
+        return true
+
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        Log.d("Presssssss",keyCode.toString())
+        return true
+
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        Log.d("Presssssss",keyCode.toString())
+        return true
+    }
+
     private var user: FirebaseUser? = null
     private var uname: String? = null
     private val auth = FirebaseAuth.getInstance()
@@ -97,6 +121,7 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
         if(user!!.photoUrl == null){
             Log.d(Constants.TAG, "!!!!!")
             view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
@@ -109,8 +134,20 @@ class HomeFragment : Fragment() {
                 .into(view.imageView)
         }
         view.username.text = uname
+//        view.home_button.setOnKeyListener { v, keyCode, event ->
+//            Log.d("CODE!!!!", keyCode.toString())
+//            true
+//        }
+        view.username.setOnClickListener {
+            listener!!.showSoftKeyboard(view)
+        }
+
+
 //        view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
         view.home_button.setOnClickListener {
+            Log.d("AFTER" ,"Fine")
+//            listener!!.showSoftKeyboard(view)
+
             val builder = AlertDialog.Builder(context!!)
             builder.setTitle("Enter Your Code Here")
             val view = LayoutInflater.from(context).inflate(
@@ -123,6 +160,12 @@ class HomeFragment : Fragment() {
                 waitOrJoin(code)
             }
             builder.setNegativeButton(android.R.string.cancel, null)
+//            builder.setOnClickListener {
+//            }
+//            builder.setOnKeyListener { v, keyCode, event ->
+//                Log.d("CODE!!!!", keyCode.toString())
+//                true
+//            }
             builder.show()
         }
         view.imageView.setOnClickListener {
@@ -141,6 +184,7 @@ class HomeFragment : Fragment() {
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
+
     }
 
     override fun onDetach() {
@@ -162,6 +206,7 @@ class HomeFragment : Fragment() {
     interface OnHomeFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onHomeFragmentInteraction(mr:MatchResult, isChallenger: Boolean)
+        fun showSoftKeyboard(view:View)
     }
 
     companion object {
