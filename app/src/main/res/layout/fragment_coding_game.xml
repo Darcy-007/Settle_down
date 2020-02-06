@@ -48,4 +48,14 @@
         android:layout_toEndOf="@id/coding_score"
         android:text="0"
         android:layout_alignBottom="@id/coding_score"/>
+
+    <TextView
+        android:id="@+id/coding_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_marginTop="35dp"
+        android:layout_toEndOf="@id/coding_score"
+        android:text="0"
+        android:layout_alignBottom="@id/coding_score"/>
 </RelativeLayout>

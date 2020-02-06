@@ -11,14 +11,15 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class MatchResult(
     val challenger: String = "",
-    var challengerScore: Int = 1,
+    var challengerScore: Int = 0,
     var code: String = "",
     var complete: Boolean = false,
     var eventResolved: String = "",
     var gameType: Int = 0,
     var receiver: String = "",
     var receiverScore: Int = 0,
-    var winner: String = ""
+    var winner: String = "",
+    var gameId: String = ""
     ): Parcelable {
     @get:Exclude var id = ""
 //    @ServerTimestamp var Date: Timestamp? = null
