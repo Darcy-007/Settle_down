@@ -80,7 +80,11 @@ class GameDashBoardFragment : Fragment() {
                 var game = it.documents[Random.nextInt(it.documents.size)].id
                 Log.d("JSJSJJSJSJSJJSJSJSJJS", game)
                 mr?.gameType = Constants.typegame
+<<<<<<< HEAD
                 mr!!.gameId = arrayListOf(game)
+=======
+//                mr!!.gameId = game
+>>>>>>> CodingGame
                 ref.document(mr!!.id).set(mr!!)
                     .addOnSuccessListener {
                         listener?.onGameDashboardFragmentInteraction(mr, TypeGame())
