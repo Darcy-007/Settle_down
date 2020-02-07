@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity(),
     WaitingFragment.OnWaitingFragmentInteractionListener,
     GameDashBoardFragment.OnGameDashboardFragmentInteractionListener,
     CodingGameFragment.OnCodingGameFragmentInteractionListener,
-    TypingGameFragment.OnTypingGameFragmentInteractionListener {
-
+    TypingGameFragment.OnTypingGameFragmentInteractionListener,
+ScoreboardFragment.OnScoreboardFragmentInteractionListener{
 
 
     private val auth = FirebaseAuth.getInstance()
@@ -188,6 +188,11 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
 
     }
+
+    override fun onScoreboardFragmentInteraction(uri: Uri) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
 
 }

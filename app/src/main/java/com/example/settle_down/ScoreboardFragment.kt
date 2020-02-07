@@ -28,7 +28,7 @@ class ScoreboardFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var mr: MatchResult? = null
     private var isWinner: Boolean? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnScoreboardFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,12 +63,12 @@ class ScoreboardFragment : Fragment() {
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+        listener?.onScoreboardFragmentInteraction(uri)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnScoreboardFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -91,9 +91,9 @@ class ScoreboardFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface OnScoreboardFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        fun onScoreboardFragmentInteraction(uri: Uri)
     }
 
     companion object {
