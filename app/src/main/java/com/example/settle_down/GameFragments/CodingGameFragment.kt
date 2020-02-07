@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import com.example.settle_down.Constants
@@ -50,22 +51,6 @@ class CodingGameFragment : Fragment() {
         }
     }
 
-    init {
-        FirestoreDataManager.matchresultRef.addSnapshotListener{ snapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
-                if(firebaseFirestoreException != null){
-                    Log.e(Constants.TAG, "Listen error: $firebaseFirestoreException")
-                    return@addSnapshotListener
-                }
-                for(doChange in snapshot!!.documentChanges){
-                    val match = MatchResult.matchResultFromSnapshot(doChange.document)
-                    when (doChange.type){
-                        DocumentChange.Type.MODIFIED -> {
-                            //Todo: listener for updates
-                        }
-                    }
-                }
-            }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,18 +58,57 @@ class CodingGameFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_coding_game, container, false)
-
+        FirestoreDataManager.matchresultRef.addSnapshotListener{ snapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+            if(firebaseFirestoreException != null){
+                Log.e(Constants.TAG, "Listen error: $firebaseFirestoreException")
+                return@addSnapshotListener
+            }
+            for(doChange in snapshot!!.documentChanges){
+                val match = MatchResult.matchResultFromSnapshot(doChange.document)
+                when (doChange.type){
+                    DocumentChange.Type.MODIFIED -> {
+                        incomingUpdate(match, view)
+                    }
+                }
+            }
+        }
         if(isChallenger!!){
             //red for challenger
             view.coding_len.setImageResource(R.drawable.ic_lens_red_24dp)
-            view.coding_score.text = mr!!.challengerScore.toString()
-            view.coding_score.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
+            view.coding_user_score.text = mr!!.challengerScore.toString()
+            view.coding_another_score.text = mr!!.receiverScore.toString()
+            view.coding_user_score.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
+            view.coding_another_score.setTextColor(ContextCompat.getColor(context!!, R.color.colorLightBlue))
         }else{
-
+            view.coding_len.setImageResource(R.drawable.ic_lens_blue_24dp)
+            view.coding_user_score.text = mr!!.receiverScore.toString()
+            view.coding_another_score.text = mr!!.challengerScore.toString()
+            view.coding_user_score.setTextColor(ContextCompat.getColor(context!!, R.color.colorLightBlue))
+            view.coding_another_score.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
         }
         setProblem(view)
-        startAnimation()
         return view
+    }
+
+    private fun updateText(match: MatchResult, view: View){
+        if(isChallenger!!){
+            //red for challenger
+            view.coding_user_score.text = match.challengerScore.toString()
+            view.coding_another_score.text = match.receiverScore.toString()
+        }else{
+            view.coding_user_score.text = match.receiverScore.toString()
+            view.coding_another_score.text = match.challengerScore.toString()
+        }
+    }
+
+    private fun incomingUpdate(match: MatchResult, view: View) {
+        if(!match.winner.isEmpty()){
+            Log.d(Constants.TAG, "Finished!")
+        }else{
+            Log.d(Constants.TAG, "Update Text!")
+            updateText(match, view)
+            mr = match
+        }
     }
 
     private fun setProblem(view: View){
@@ -94,9 +118,18 @@ class CodingGameFragment : Fragment() {
             view.coding_button1.text = (it["choice1"]?:"")as String
             view.coding_button2.text = (it["choice2"]?:"")as String
             view.coding_button3.text = (it["choice3"]?:"")as String
-            currentCorrect = (it["answer"]) as Int
+            currentCorrect = ((it["answer"]) as Long?)!!.toInt()
             setOnClicks(view)
+            setButtonsColor(view)
+            startAnimation(view)
         }
+    }
+
+    private fun setButtonsColor(view: View){
+        view.coding_button0.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorWhite))
+        view.coding_button1.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorWhite))
+        view.coding_button2.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorWhite))
+        view.coding_button3.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorWhite))
     }
 
     private fun setOnClicks(view: View){
@@ -116,8 +149,8 @@ class CodingGameFragment : Fragment() {
 
     private fun onClickHelper(buttonNum:Int, button: Button){
         var docId = mr!!.id
+        Log.d(Constants.TAG, "Current Question Index is $currentQuestion")
         if(buttonNum == currentCorrect){
-
             if(isChallenger!!){
                 mr!!.challengerScore += 1
             }else{
@@ -129,28 +162,34 @@ class CodingGameFragment : Fragment() {
                 }else{
                     mr!!.winner = mr!!.receiver
                 }
-                mr!!.complete = true
+                mr!!.winner = "???"
             }
             button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdGreen))
         }else{
             if(currentQuestion == 2){
-                mr!!.complete = true
+                mr!!.winner = "???"
             }
             button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
         }
-        FirestoreDataManager.codingingGameRef.document(docId).set(mr!!)
+        FirestoreDataManager.matchresultRef.document(docId).set(mr!!)
         if(currentQuestion != 2){
             currentQuestion += 1
             setProblem(view!!)
         }
     }
 
-    private fun startAnimation() {
-        val mProgressBar = view!!.coding_progressBar as ProgressBar
+    private fun startAnimation(view: View) {
+        val mProgressBar = view.coding_progressBar as ProgressBar
         val progressAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 1000, 0)
         progressAnimator.setDuration(5000)
         progressAnimator.interpolator = LinearInterpolator()
         progressAnimator.doOnEnd {
+            if(currentQuestion != 2){
+                currentQuestion+=1
+                setProblem(view)
+            }else{
+                Log.d(Constants.TAG, "last question")
+            }
         }
         progressAnimator.start()
     }
