@@ -70,7 +70,7 @@ class TypingGameFragment : Fragment() {
                 if (change.code == mr!!.code && change.challenger.isNotEmpty() && change.winner.isEmpty()) {
                     when (docChange.type) {
                         DocumentChange.Type.MODIFIED -> {
-                            listener!!.onTypingGameFragmentInteraction()
+                            listener!!.onTypingGameFragmentInteraction(mr!!, false)
                         }
                     }
                 }
@@ -115,7 +115,6 @@ class TypingGameFragment : Fragment() {
                         val spannable = SpannableString(problem)
                         if (currentProgress == problem) {
                             Log.d("YES!!!!!", "DONE!!!!!")
-                            listener!!.onTypingGameFragmentInteraction()
                             if(isChallenger!!){
                                 mr!!.challengerScore=1
                                 mr!!.winner = mr!!.challenger
@@ -126,7 +125,7 @@ class TypingGameFragment : Fragment() {
                                 mr!!.complete = true
                             }
                             FirestoreDataManager.typingGameRef.document(mr!!.id).set(mr!!).addOnSuccessListener {
-                                listener!!.onTypingGameFragmentInteraction()
+                                listener!!.onTypingGameFragmentInteraction(mr!!, true)
                             }
                         }
                         for (i in currentProgress.indices) {
@@ -190,7 +189,7 @@ class TypingGameFragment : Fragment() {
      */
     interface OnTypingGameFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onTypingGameFragmentInteraction()
+        fun onTypingGameFragmentInteraction(mr:MatchResult, isWinner:Boolean)
 
         fun showSoftKeyboard(view: View)
     }

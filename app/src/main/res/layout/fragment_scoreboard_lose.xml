@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScoreboardFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="40dp"
+    android:id="@+id/scoreboardScore">
+        <TextView
+            android:id="@+id/coding_user_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/coding_score"
+            android:layout_marginTop="35dp"
+            android:layout_toStartOf="@id/coding_score"
+            android:text="0"
+            android:textColor="@color/colorSdRed"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/coding_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="10dp"
+            android:text=":"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/coding_another_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/coding_score"
+            android:layout_marginTop="35dp"
+            android:layout_toEndOf="@id/coding_score"
+            android:text="0"
+            android:textColor="@color/colorLightBlue"
+            android:textSize="45sp" />
+</RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You Lost :("
+            android:textSize="30sp"
+            android:id="@+id/scoreboardLostText"
+            android:layout_below="@id/scoreboardScore"
+            android:layout_marginLeft="40dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/scoreboardLostText"
+            android:layout_alignTop="@+id/scoreboardLostText"
+            android:id="@+id/scoreboardFunPic"/>
+
+        <Button
+            android:layout_width="160dp"
+            android:backgroundTint="@color/colorLightBlue"
+            android:layout_height="60dp"
+            android:text="Crap!"
+            android:textSize="24sp"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/scoreboardLostText"
+            android:layout_marginTop="100dp"
+
+            />
+    </RelativeLayout>
+
+</FrameLayout>

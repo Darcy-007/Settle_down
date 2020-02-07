@@ -22,9 +22,6 @@ class MainActivity : AppCompatActivity(),
     GameDashBoardFragment.OnGameDashboardFragmentInteractionListener,
     CodingGameFragment.OnCodingGameFragmentInteractionListener,
     TypingGameFragment.OnTypingGameFragmentInteractionListener {
-    override fun onTypingGameFragmentInteraction() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
 
 
@@ -182,5 +179,13 @@ class MainActivity : AppCompatActivity(),
     override fun onCodingGameFragmentInteraction() {
 
     }
+
+    override fun onTypingGameFragmentInteraction(mr:MatchResult, isWinner:Boolean) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr, isWinner))
+        ft.commit()
+
+    }
+
 
 }
