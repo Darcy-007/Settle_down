@@ -109,21 +109,24 @@ class TypingGameFragment : Fragment() {
                         Log.d("EDITTEXTTTTTT", s.toString())
                         currentProgress = s.toString()
                         val spannable = SpannableString(problem)
-                        if (currentProgress == problem) {
+                        if (currentProgress.equals(problem)) {
                             Log.d("YES!!!!!", "DONE!!!!!")
                             if(isChallenger!!){
                                 mr!!.challengerScore=1
                                 mr!!.winner = mr!!.challenger
-                                mr!!.complete = true
                             }else{
                                 mr!!.receiverScore=1
                                 mr!!.winner = mr!!.receiver
-                                mr!!.complete = true
                             }
-                            Log.d("LOG", listener.toString())
+
+                            Log.d("LOG", mr!!.id)
+                            Log.d("LOG", mr!!.toString())
+
                             FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!).addOnSuccessListener {
+                                Log.d("LOG", listener.toString())
                                 listener!!.onTypingGameFragmentInteraction(mr!!, true)
                             }
+                            return
                         }
                         for (i in currentProgress.indices) {
                             if (problem.get(i) != currentProgress.get(i)) {
@@ -168,11 +171,6 @@ class TypingGameFragment : Fragment() {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
 
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
     }
 
     /**
