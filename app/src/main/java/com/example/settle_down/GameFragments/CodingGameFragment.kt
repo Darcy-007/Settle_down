@@ -40,6 +40,7 @@ class CodingGameFragment : Fragment() {
     private var isChallenger: Boolean? = null
     private var currentQuestion = 0
     private var currentCorrect = -1
+    private var playId: String? = null
     private var listener: OnCodingGameFragmentInteractionListener? = null
 //    private var view: View? = null
 
@@ -49,6 +50,7 @@ class CodingGameFragment : Fragment() {
             mr = it.getParcelable(CG)
             isChallenger = it.getBoolean(ISC)
         }
+        playId = if (isChallenger!!) mr!!.challenger else mr!!.receiver
     }
 
 
@@ -102,13 +104,22 @@ class CodingGameFragment : Fragment() {
     }
 
     private fun incomingUpdate(match: MatchResult, view: View) {
-        if(!match.winner.isEmpty()){
+        updateText(match, view)
+        mr = match
+        if(match.winner.equals(playId)){
             Log.d(Constants.TAG, "Finished!")
+            listener!!.onCodingGameFragmentInteraction(mr!!,false )
+        }else if(!match.winner.isEmpty()){
+            Log.d(Constants.TAG, "another player finished")
         }else{
-            Log.d(Constants.TAG, "Update Text!")
-            updateText(match, view)
-            mr = match
+            Log.d(Constants.TAG, "only update score")
+
         }
+//        else{
+//            Log.d(Constants.TAG, "Update Text!")
+////            updateText(match, view)
+//            mr = match
+//        }
     }
 
     private fun setProblem(view: View){
@@ -121,7 +132,7 @@ class CodingGameFragment : Fragment() {
             currentCorrect = ((it["answer"]) as Long?)!!.toInt()
             setOnClicks(view)
             setButtonsColor(view)
-            startAnimation(view)
+//            startAnimation(view)
         }
     }
 
@@ -162,17 +173,17 @@ class CodingGameFragment : Fragment() {
                 }else{
                     mr!!.winner = mr!!.receiver
                 }
-                mr!!.winner = "???"
+                mr!!.winner = if (isChallenger!!) mr!!.challenger else mr!!.receiver
             }
             button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdGreen))
         }else{
             if(currentQuestion == 2){
-                mr!!.winner = "???"
+                mr!!.winner = playId!!
             }
             button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
         }
         FirestoreDataManager.matchresultRef.document(docId).set(mr!!)
-        if(currentQuestion != 2){
+        if(currentQuestion < 2){
             currentQuestion += 1
             setProblem(view!!)
         }
@@ -221,7 +232,7 @@ class CodingGameFragment : Fragment() {
      * for more information.
      */
     interface OnCodingGameFragmentInteractionListener {
-        fun onCodingGameFragmentInteraction()
+        fun onCodingGameFragmentInteraction(mr: MatchResult, isWinner:Boolean)
     }
 
     companion object {

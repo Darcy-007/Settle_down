@@ -176,8 +176,10 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
-    override fun onCodingGameFragmentInteraction() {
-
+    override fun onCodingGameFragmentInteraction(mr: MatchResult, isWinner: Boolean) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr, isWinner))
+        ft.commit()
     }
 
     override fun onTypingGameFragmentInteraction(mr:MatchResult, isWinner:Boolean) {
