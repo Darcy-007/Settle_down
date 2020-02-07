@@ -60,6 +60,21 @@ class CodingGameFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_coding_game, container, false)
+        FirestoreDataManager.matchresultRef.addSnapshotListener{ snapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+            if(firebaseFirestoreException != null){
+                Log.e(Constants.TAG, "Listen error: $firebaseFirestoreException")
+                return@addSnapshotListener
+            }
+            for(doChange in snapshot!!.documentChanges){
+                val match = MatchResult.matchResultFromSnapshot(doChange.document)
+                when (doChange.type){
+                    DocumentChange.Type.MODIFIED -> {
+                        Log.d(Constants.TAG, "Database modified!")
+                        incomingUpdate(match, view!!)
+                    }
+                }
+            }
+        }
         if(isChallenger!!){
             //red for challenger
             view.coding_len.setImageResource(R.drawable.ic_lens_red_24dp)
@@ -198,20 +213,6 @@ class CodingGameFragment : Fragment() {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-        FirestoreDataManager.matchresultRef.addSnapshotListener{ snapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
-            if(firebaseFirestoreException != null){
-                Log.e(Constants.TAG, "Listen error: $firebaseFirestoreException")
-                return@addSnapshotListener
-            }
-            for(doChange in snapshot!!.documentChanges){
-                val match = MatchResult.matchResultFromSnapshot(doChange.document)
-                when (doChange.type){
-                    DocumentChange.Type.MODIFIED -> {
-                        incomingUpdate(match, view!!)
-                    }
-                }
-            }
         }
     }
 
