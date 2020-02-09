@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import com.example.settle_down.GameFragments.CodingGameFragment
+import com.example.settle_down.GameFragments.DiceGameFragment
 import com.example.settle_down.GameFragments.TypingGameFragment
 import com.example.settle_down.Models.*
 import com.firebase.ui.auth.AuthUI
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity(),
     GameDashBoardFragment.OnGameDashboardFragmentInteractionListener,
     CodingGameFragment.OnCodingGameFragmentInteractionListener,
     TypingGameFragment.OnTypingGameFragmentInteractionListener,
+    DiceGameFragment.OnDiceGameFragmentInteractionListener,
     WaitingAnotherInGameFragment.OnWAIGFragmentInteractionListener,
 ScoreboardFragment.OnScoreboardFragmentInteractionListener{
     private val auth = FirebaseAuth.getInstance()
@@ -154,6 +156,7 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
                 }
                 Constants.dicegame -> {
                     Log.d(Constants.TAG, "3")
+                    ft.replace(R.id.fragment_container, DiceGameFragment.newInstance(mr!!, false))
                 }
             }
             ft.commit()
@@ -170,7 +173,7 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
         } else if (game is TypeGame) {
             ft.replace(R.id.fragment_container, TypingGameFragment.newInstance(mr!!, true))
         } else {
-
+            ft.replace(R.id.fragment_container, DiceGameFragment.newInstance(mr!!, true))
         }
         ft.commit()
     }
@@ -185,8 +188,12 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr, isWinner))
         ft.commit()
-
     }
+
+    override fun onDiceaGameFragmentInteraction(mr:MatchResult, isWinner:Boolean) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr, isWinner))
+        ft.commit()    }
 
     override fun onScoreboardFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

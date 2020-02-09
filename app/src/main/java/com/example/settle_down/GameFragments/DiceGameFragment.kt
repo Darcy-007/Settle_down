@@ -1,13 +1,22 @@
 package com.example.settle_down.GameFragments
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
+import com.example.settle_down.Models.MatchResult
 import com.example.settle_down.R
+import com.google.firebase.firestore.DocumentChange
+import kotlinx.android.synthetic.main.fragment_dice_game.view.*
+import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,15 +33,28 @@ private const val ARG_PARAM2 = "param2"
  */
 class DiceGameFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private var mr: MatchResult? = null
+    private var isChallenger: Boolean? = null
+    private var listener: OnDiceGameFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            mr = it.getParcelable(ARG_PARAM1)
+            isChallenger = it.getBoolean(ARG_PARAM2)
+        }
+
+        FirestoreDataManager.matchresultRef.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            if (firebaseFirestoreException != null) {
+                Log.e("error", "Listen error: $firebaseFirestoreException")
+            }
+            for (docChange in querySnapshot!!.documentChanges) {
+                val change = MatchResult.matchResultFromSnapshot(docChange.document)
+                if (change.id == mr!!.id) {
+
+                }
+            }
+
         }
     }
 
@@ -41,17 +63,62 @@ class DiceGameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dice_game, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_dice_game, container, false)
+        var currentValue = rollRandomDie()
+        var currentNum = 1
+        val total = 21
+        view.Dice1.setImageResource(randomDieImg(currentValue))
+        view.setOnClickListener {
+            var imgView = ImageView(context)
+            var new = rollRandomDie()
+
+            currentValue+=new
+            imgView.setImageResource(randomDieImg(new))
+            var lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+            lp.addRule(RelativeLayout.RIGHT_OF, view.Dice1.id)
+            imgView.layoutParams = lp
+            currentNum++
+            (view as RelativeLayout).addView(imgView)
+            //if all go over 21, the first one goes over
+            if(currentValue >21){
+                view.DiceGameValue.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
+                if(isChallenger!!){
+                    mr!!.challengerScore = 0
+                    mr!!.winner = mr!!.challenger
+                }else{
+                    mr!!.receiverScore = 0
+                    mr!!.winner = mr!!.receiver
+                }
+                FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!).addOnSuccessListener {
+                    
+                }
+            }else if(currentValue in 18..21){
+                view.DiceGameValue.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdGreen))
+            }
+        }
+
+        return view
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    private fun rollRandomDie():Int{
+        return Random.nextInt(1,7)
+    }
+    private fun randomDieImg(die:Int): Int{
+        return when(die){
+            1 -> R.drawable.dice1
+            2 -> R.drawable.dice2
+            3 -> R.drawable.dice3
+            4 -> R.drawable.dice4
+            5 -> R.drawable.dice5
+            6 -> R.drawable.dice6
+            else -> 0
+        }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnDiceGameFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -74,9 +141,9 @@ class DiceGameFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface OnDiceGameFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        fun onDiceaGameFragmentInteraction(mr:MatchResult, isWinner: Boolean)
     }
 
     companion object {
@@ -90,11 +157,11 @@ class DiceGameFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(mr: MatchResult, isChallenger: Boolean) =
             DiceGameFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putParcelable(ARG_PARAM1, mr)
+                    putBoolean(ARG_PARAM2, isChallenger)
                 }
             }
     }

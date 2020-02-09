@@ -69,10 +69,10 @@ class TypingGameFragment : Fragment() {
             }
             for (docChange in querySnapshot!!.documentChanges) {
                 val change = MatchResult.matchResultFromSnapshot(docChange.document)
-                if (change.code == mr!!.code && change.challenger.isNotEmpty() && change.winner.isNotEmpty()) {
+                if (change.id == mr!!.id) {
                     when (docChange.type) {
                         DocumentChange.Type.MODIFIED -> {
-                            listener!!.onTypingGameFragmentInteraction(mr!!, false)
+                           mr = change
                         }
                     }
                 }
