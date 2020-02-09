@@ -66,11 +66,13 @@ class CodingGameFragment : Fragment() {
                 return@addSnapshotListener
             }
             for(doChange in snapshot!!.documentChanges){
-                val match = MatchResult.matchResultFromSnapshot(doChange.document)
-                when (doChange.type){
-                    DocumentChange.Type.MODIFIED -> {
-                        Log.d(Constants.TAG, "Database modified!")
-                        incomingUpdate(match, view!!)
+                if(doChange.document.id == mr!!.id){
+                    val match = MatchResult.matchResultFromSnapshot(doChange.document)
+                    when (doChange.type){
+                        DocumentChange.Type.MODIFIED -> {
+                            Log.d(Constants.TAG, "Database modified!")
+                            incomingUpdate(match, view!!)
+                        }
                     }
                 }
             }
@@ -109,7 +111,7 @@ class CodingGameFragment : Fragment() {
         mr = match
         if(match.winner.equals(playId)){
             Log.d(Constants.TAG, "Finished!")
-            listener!!.onCodingGameFragmentInteraction(mr!!,false )
+            listener!!.onCodingGameFragmentInteraction(mr!!,isChallenger!!)
         }else if(!match.winner.isEmpty()){
             Log.d(Constants.TAG, "another player finished")
         }else{
@@ -233,7 +235,7 @@ class CodingGameFragment : Fragment() {
      * for more information.
      */
     interface OnCodingGameFragmentInteractionListener {
-        fun onCodingGameFragmentInteraction(mr: MatchResult, isWinner:Boolean)
+        fun onCodingGameFragmentInteraction(mr: MatchResult, isChallenger:Boolean)
     }
 
     companion object {

@@ -22,9 +22,8 @@ class MainActivity : AppCompatActivity(),
     GameDashBoardFragment.OnGameDashboardFragmentInteractionListener,
     CodingGameFragment.OnCodingGameFragmentInteractionListener,
     TypingGameFragment.OnTypingGameFragmentInteractionListener,
+    WaitingAnotherInGameFragment.OnWAIGFragmentInteractionListener,
 ScoreboardFragment.OnScoreboardFragmentInteractionListener{
-
-
     private val auth = FirebaseAuth.getInstance()
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     private val RC_SIGN_IN = 1
@@ -176,9 +175,9 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
         ft.commit()
     }
 
-    override fun onCodingGameFragmentInteraction(mr: MatchResult, isWinner: Boolean) {
+    override fun onCodingGameFragmentInteraction(mr: MatchResult, isChallenger: Boolean) {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr, isWinner))
+        ft.replace(R.id.fragment_container, WaitingAnotherInGameFragment.newInstance(mr, isChallenger))
         ft.commit()
     }
 
@@ -192,6 +191,12 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
     override fun onScoreboardFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun onWAIGFragmentInteraction(mr: MatchResult?, isChalllenger: Boolean?) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr!!, true))
+        ft.commit()    }
+
 
 
 
