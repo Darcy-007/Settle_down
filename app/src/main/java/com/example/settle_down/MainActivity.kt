@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity(),
     DiceGameFragment.OnDiceGameFragmentInteractionListener,
     WaitingAnotherInGameFragment.OnWAIGFragmentInteractionListener,
 ScoreboardFragment.OnScoreboardFragmentInteractionListener{
+
+
     private val auth = FirebaseAuth.getInstance()
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     private val RC_SIGN_IN = 1
@@ -190,7 +192,7 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
         ft.commit()
     }
 
-    override fun onDiceaGameFragmentInteraction(mr:MatchResult, isWinner:Boolean) {
+    override fun onDiceGameFragmentInteraction(mr:MatchResult, isWinner:Boolean) {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr, isWinner))
         ft.commit()    }

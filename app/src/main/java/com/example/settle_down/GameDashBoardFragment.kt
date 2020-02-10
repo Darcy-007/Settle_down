@@ -78,7 +78,6 @@ class GameDashBoardFragment : Fragment() {
         view.game_dashboard_typing.setOnClickListener {
             FirestoreDataManager.typingGameRef.get().addOnSuccessListener {
                 var game = it.documents[Random.nextInt(it.documents.size)].id
-                Log.d("JSJSJJSJSJSJJSJSJSJJS", game)
                 mr?.gameType = Constants.typegame
                 mr!!.gameId = arrayListOf(game)
                 ref.document(mr!!.id).set(mr!!)
@@ -90,9 +89,9 @@ class GameDashBoardFragment : Fragment() {
         }
         view.game_dashboard_dice.setOnClickListener {
             mr?.gameType = Constants.dicegame
+            mr!!.gameId = arrayListOf("DiceGame")
             ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
-                var game = DiceGame()
-                listener?.onGameDashboardFragmentInteraction(mr, game)
+                listener?.onGameDashboardFragmentInteraction(mr, DiceGame())
             }
         }
 

@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/DiceGameRule"
             android:layout_margin="20dp"
-            android:text="Your Current Value is: 0" />
+            android:text="Your Current Value Is: 0" />
 
         <TextView
             android:id="@+id/DiceGameAim"
@@ -45,10 +45,169 @@
             android:text="Your Aim: 21"
             android:textStyle="bold" />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:id="@+id/Dice1"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/DiceGameAim"
             />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice2"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/DiceGameAim"
+            android:layout_toRightOf="@+id/Dice1"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice3"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/DiceGameAim"
+            android:layout_toRightOf="@+id/Dice2"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice4"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/DiceGameAim"
+            android:layout_toRightOf="@+id/Dice3"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice5"
+            android:layout_below="@+id/Dice1"
+            android:layout_margin="5dp"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice6"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice2"
+            android:layout_toRightOf="@+id/Dice5"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice7"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice3"
+            android:layout_toRightOf="@+id/Dice6"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice8"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice4"
+            android:layout_toRightOf="@+id/Dice7"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice9"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice5"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice10"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice6"
+            android:layout_toRightOf="@+id/Dice9"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:id="@+id/Dice11"
+            android:layout_below="@+id/Dice7"
+            android:layout_toRightOf="@+id/Dice10"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice12"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice8"
+            android:layout_toRightOf="@+id/Dice11"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice13"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice9"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice14"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice6"
+            android:layout_toRightOf="@+id/Dice13"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:id="@+id/Dice15"
+            android:layout_below="@+id/Dice7"
+            android:layout_toRightOf="@+id/Dice14"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice16"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice8"
+            android:layout_toRightOf="@+id/Dice15"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice17"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice9"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice18"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice14"
+            android:layout_toRightOf="@+id/Dice17"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:id="@+id/Dice19"
+            android:layout_below="@+id/Dice15"
+            android:layout_toRightOf="@+id/Dice18"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice20"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice16"
+            android:layout_toRightOf="@+id/Dice19"
+            />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/Dice21"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/Dice17"
+            />
+
+
 
 
         <Button
@@ -59,6 +218,7 @@
             android:layout_marginBottom="20dp"
             android:backgroundTint="@color/colorLightBlue"
             android:text="ADD ONE"
+            android:id="@+id/DiceGameAddOne"
             android:textColor="@color/colorWhite"
             android:textSize="20sp" />
 
@@ -71,6 +231,7 @@
             android:layout_marginBottom="20dp"
             android:backgroundTint="@color/colorLightBlue"
             android:text="Submit"
+            android:id="@+id/DiceGameSubmit"
             android:layout_marginRight="20dp"
             android:textColor="@color/colorWhite"
             android:textSize="20sp" />

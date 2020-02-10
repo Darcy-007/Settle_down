@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
@@ -66,20 +67,19 @@ class DiceGameFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_dice_game, container, false)
         var currentValue = rollRandomDie()
-        var currentNum = 1
+        var currentIndex = 1
         val total = 21
         view.Dice1.setImageResource(randomDieImg(currentValue))
-        view.setOnClickListener {
-            var imgView = ImageView(context)
+        view.DiceGameValue.text = "Your Current Value Is: $currentValue"
+        var idArray = arrayListOf<ImageView>(view.Dice1,view.Dice2, view.Dice3, view.Dice4, view.Dice5, view.Dice6, view.Dice7, view.Dice8, view.Dice9, view.Dice10, view.Dice11,
+            view.Dice12, view.Dice13, view.Dice14, view.Dice15, view.Dice16, view.Dice17, view.Dice18, view.Dice19, view.Dice20, view.Dice21)
+        view.DiceGameAddOne.setOnClickListener {
+            var imgView = idArray[currentIndex]
             var new = rollRandomDie()
-
-            currentValue+=new
             imgView.setImageResource(randomDieImg(new))
-            var lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
-            lp.addRule(RelativeLayout.RIGHT_OF, view.Dice1.id)
-            imgView.layoutParams = lp
-            currentNum++
-            (view as RelativeLayout).addView(imgView)
+            currentValue+=new
+            currentIndex++
+            view.DiceGameValue.text = "Your Current Value Is: $currentValue"
             //if all go over 21, the first one goes over
             if(currentValue >21){
                 view.DiceGameValue.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
@@ -91,11 +91,47 @@ class DiceGameFragment : Fragment() {
                     mr!!.winner = mr!!.receiver
                 }
                 FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!).addOnSuccessListener {
-                    
+                    if(mr!!.winner.isNotEmpty()){
+                        listener!!.onDiceGameFragmentInteraction(mr!!, true)
+                    }else{
+
+                    }
                 }
             }else if(currentValue in 18..21){
                 view.DiceGameValue.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdGreen))
             }
+        }
+
+        view.DiceGameSubmit.setOnClickListener {
+            if(isChallenger!!){
+                mr!!.challengerScore = currentValue
+                if(mr!!.winner.isNotEmpty()){
+                    if(mr!!.receiverScore<mr!!.challengerScore){
+                        mr!!.winner = mr!!.challenger
+                    }
+                }else{
+                    mr!!.winner = mr!!.challenger
+                }
+            }else{
+                mr!!.receiverScore = currentValue
+                if(mr!!.winner.isNotEmpty()){
+                    if(mr!!.receiverScore>mr!!.challengerScore){
+                        mr!!.winner = mr!!.receiver
+                    }
+                }else{
+                    mr!!.winner = mr!!.receiver
+                }
+            }
+            FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!).addOnSuccessListener {
+                if(mr!!.winner.isNotEmpty()){
+                    listener!!.onDiceGameFragmentInteraction(mr!!, true)
+                }else{
+
+                }
+            }
+
+
+
         }
 
         return view
@@ -125,11 +161,6 @@ class DiceGameFragment : Fragment() {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -143,7 +174,7 @@ class DiceGameFragment : Fragment() {
      */
     interface OnDiceGameFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onDiceaGameFragmentInteraction(mr:MatchResult, isWinner: Boolean)
+        fun onDiceGameFragmentInteraction(mr:MatchResult, isWinner: Boolean)
     }
 
     companion object {
