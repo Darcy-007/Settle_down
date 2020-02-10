@@ -71,9 +71,10 @@ class WaitingAnotherInGameFragment : Fragment() {
     }
 
     private fun incomingUpdate(match: MatchResult, view: View) {
-        if (match.winner.equals(playId)){
+        if (match.winner.equals(playId) && match.numCompleted == 1){
             Log.d(Constants.TAG, "Another player still not finished")
-        }else{
+        }else if(!match.winner.equals(playId) || match.numCompleted == 2){
+            Log.d(Constants.TAG, "Another player FINISHED")
             listener!!.onWAIGFragmentInteraction(mr, isChalllenger)
         }
     }

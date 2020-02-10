@@ -17,10 +17,7 @@ import androidx.core.content.ContextCompat
 import com.example.settle_down.Constants
 import com.example.settle_down.Models.MatchResult
 import com.example.settle_down.R
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.fragment_coding_game.view.*
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,12 +40,16 @@ class CodingGameFragment : Fragment() {
     private var playId: String? = null
     private var listener: OnCodingGameFragmentInteractionListener? = null
 //    private var view: View? = null
+    private var refGame = FirestoreDataManager.codingingGameRef
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             mr = it.getParcelable(CG)
             isChallenger = it.getBoolean(ISC)
+        }
+        if(mr!!.gameType == Constants.mathgame){
+            refGame = FirestoreDataManager.mathGameRef
         }
         playId = if (isChallenger!!) mr!!.challenger else mr!!.receiver
     }
@@ -126,7 +127,7 @@ class CodingGameFragment : Fragment() {
     }
 
     private fun setProblem(view: View){
-        FirestoreDataManager.codingingGameRef.document(mr!!.gameId!!.get(currentQuestion)).get().addOnSuccessListener {
+        refGame.document(mr!!.gameId!!.get(currentQuestion)).get().addOnSuccessListener {
             view.coding_question.text = (it["problem"]?:"")as String
             view.coding_button0.text = (it["choice0"]?:"")as String
             view.coding_button1.text = (it["choice1"]?:"")as String
@@ -171,6 +172,7 @@ class CodingGameFragment : Fragment() {
                 mr!!.receiverScore += 1
             }
             if(currentQuestion == 2){
+                mr!!.numCompleted+=1
                 if(isChallenger!!){
                     mr!!.winner = mr!!.challenger
                 }else{
@@ -181,6 +183,7 @@ class CodingGameFragment : Fragment() {
             button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdGreen))
         }else{
             if(currentQuestion == 2){
+                mr!!.numCompleted+=1
                 mr!!.winner = playId!!
             }
             button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdRed))

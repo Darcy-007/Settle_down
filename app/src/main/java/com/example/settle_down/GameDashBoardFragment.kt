@@ -44,17 +44,25 @@ class GameDashBoardFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_game_dash_board, container, false)
         view.game_dashboard_math.setOnClickListener {
             mr?.gameType = Constants.mathgame
-            ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
-                var game = MathGame()
-                listener?.onGameDashboardFragmentInteraction(mr, game)
+            FirestoreDataManager.mathGameRef.get().addOnSuccessListener {
+                var questionlist = ArrayList<String>()
+                while (questionlist.size != 3){
+                    var documentSize = it.documents.size
+                    var nextid = it.documents[Random.nextInt(documentSize)].id
+                    if(!questionlist.contains(nextid)){
+                        questionlist.add(nextid)
+                    }
+                }
+                Log.d(Constants.TAG, questionlist.toString())
+                mr!!.gameId = questionlist
+                ref.document(mr!!.id).set(mr!!)
+                    .addOnSuccessListener {
+                        listener?.onGameDashboardFragmentInteraction(mr, CodingGame())
+                    }
             }
         }
         view.game_dashboard_computer.setOnClickListener {
             mr?.gameType = Constants.codinggame
-//            ref.document(mr!!.id).set(mr!!).addOnCompleteListener {
-//                var game = CodingGame()
-//                listener?.onGameDashboardFragmentInteraction(mr, game)
-//            }
             FirestoreDataManager.codingingGameRef.get().addOnSuccessListener {
                 var questionlist = ArrayList<String>()
                 while (questionlist.size != 3){

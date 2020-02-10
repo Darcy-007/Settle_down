@@ -142,10 +142,10 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
             ft.commit()
         } else {
             val ft = supportFragmentManager.beginTransaction()
-
             when (mr!!.gameType) {
                 Constants.mathgame -> {
                     Log.d(Constants.TAG, "0")
+                    ft.replace(R.id.fragment_container, CodingGameFragment.newInstance(mr!!, false))
                 }
                 Constants.codinggame -> {
                     Log.d(Constants.TAG, "1")
@@ -169,7 +169,7 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
         val ft = supportFragmentManager.beginTransaction()
 
         if (game is MathGame) {
-
+            ft.replace(R.id.fragment_container, CodingGameFragment.newInstance(mr!!, true))
         } else if (game is CodingGame) {
             ft.replace(R.id.fragment_container, CodingGameFragment.newInstance(mr!!, true))
         } else if (game is TypeGame) {
@@ -203,10 +203,24 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
 
     override fun onWAIGFragmentInteraction(mr: MatchResult?, isChalllenger: Boolean?) {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr!!, true))
-        ft.commit()    }
-
-
-
+        val myId = if(isChalllenger!!) mr!!.challenger else mr!!.receiver
+        val anotherId = if(isChalllenger) mr.receiver else mr.challenger
+        val myResult:Boolean
+        if(mr.challengerScore>mr.receiverScore){
+            myResult = if(isChalllenger) true else false
+        }else if(mr.receiverScore>mr.challengerScore){
+            myResult = if(isChalllenger) false else true
+        }else{
+            if(mr.winner == myId){
+                mr.winner = anotherId
+                myResult = false
+            }else{
+                mr.winner = myId
+                myResult = true
+            }
+        }
+        ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr!!, myResult))
+        ft.commit()
+    }
 
 }
