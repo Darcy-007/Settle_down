@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.example.settle_down.Models.MatchResult
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_scoreboard_lose.view.*
+import kotlinx.android.synthetic.main.fragment_scoreboard_win.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,11 +46,30 @@ class ScoreboardFragment : Fragment() {
         // Inflate the layout for this fragment
 
 
-        var view:View? = null
+        var view:View?
         if(isWinner!!) {
             view = inflater.inflate(R.layout.fragment_scoreboard_win, container, false)
+            view!!.SB_win_user_score.text = mr!!.challengerScore.toString()
+            view!!.SB_win_another_score.text = mr!!.receiverScore.toString()
+            view!!.scoreboardNice.setOnClickListener {
+                var event = view!!.scoreboardMakeDecision.text.toString()
+                if(event.isEmpty()){
+                    event = "Nothing Special"
+                }
+                mr!!.eventResolved = event
+                FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!).addOnCompleteListener {
+                    listener!!.onScoreboardFragmentInteraction()
+                }
+            }
         } else {
             view = inflater.inflate(R.layout.fragment_scoreboard_lose, container, false)
+            view!!.SB_lose_user_score.text = mr!!.receiverScore.toString()
+            view!!.SB_lose_another_score.text = mr!!.challengerScore.toString()
+            view!!.scoreboardCrap.setOnClickListener {
+                listener!!.onScoreboardFragmentInteraction()
+            }
+
+
             Picasso.get()
                 .load("https://img9.doubanio.com/lpic/o591865.jpg")
                 .resize(6000, 2000)
@@ -62,9 +82,7 @@ class ScoreboardFragment : Fragment() {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onScoreboardFragmentInteraction(uri)
-    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -75,10 +93,6 @@ class ScoreboardFragment : Fragment() {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -93,7 +107,7 @@ class ScoreboardFragment : Fragment() {
      */
     interface OnScoreboardFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onScoreboardFragmentInteraction(uri: Uri)
+        fun onScoreboardFragmentInteraction()
     }
 
     companion object {

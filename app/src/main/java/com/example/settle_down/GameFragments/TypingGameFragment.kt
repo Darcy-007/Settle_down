@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.*
 import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -18,10 +19,6 @@ import com.example.settle_down.R
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_typing_game.view.*
 import kotlin.random.Random
-import android.text.Editable
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import com.google.firebase.firestore.DocumentChange
 import kotlinx.android.synthetic.main.fragment_waiting.view.*
@@ -73,6 +70,7 @@ class TypingGameFragment : Fragment() {
                     when (docChange.type) {
                         DocumentChange.Type.MODIFIED -> {
                            mr = change
+                            listener!!.onTypingGameFragmentInteraction(mr!!, false)
                         }
                     }
                 }
@@ -109,6 +107,8 @@ class TypingGameFragment : Fragment() {
                         Log.d("EDITTEXTTTTTT", s.toString())
                         currentProgress = s.toString()
                         val spannable = SpannableString(problem)
+
+
                         if (currentProgress.equals(problem)) {
                             Log.d("YES!!!!!", "DONE!!!!!")
                             if(isChallenger!!){
@@ -128,19 +128,21 @@ class TypingGameFragment : Fragment() {
                             }
                             return
                         }
-                        for (i in currentProgress.indices) {
-                            if (problem.get(i) != currentProgress.get(i)) {
-                                spannable.setSpan(
-                                    ForegroundColorSpan(Color.RED),
-                                    i, i + 1,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-                            } else {
-                                spannable.setSpan(
-                                    ForegroundColorSpan(Color.rgb(103, 161, 98)),
-                                    i, i + 1,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
+                        for (i in problem.indices) {
+                            if(i<currentProgress.length) {
+                                if (problem.get(i) != currentProgress.get(i)) {
+                                    spannable.setSpan(
+                                        ForegroundColorSpan(Color.RED),
+                                        i, i + 1,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                } else {
+                                    spannable.setSpan(
+                                        ForegroundColorSpan(Color.rgb(103, 161, 98)),
+                                        i, i + 1,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                }
                             }
                         }
                         vie!!.TypingProblem.text = spannable

@@ -120,7 +120,9 @@ class HomeFragment : Fragment(){
 //            Log.d("CODE!!!!", keyCode.toString())
 //            true
 //        }
-
+        view.setOnClickListener {
+            listener!!.onHomeFragmentToHistory(user!!)
+        }
 
 
 //        view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
@@ -163,10 +165,6 @@ class HomeFragment : Fragment(){
 
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -182,6 +180,7 @@ class HomeFragment : Fragment(){
     interface OnHomeFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onHomeFragmentInteraction(mr:MatchResult, isChallenger: Boolean)
+        fun onHomeFragmentToHistory(user:FirebaseUser)
         fun showTestSoftKeyboard(view: View)
     }
 

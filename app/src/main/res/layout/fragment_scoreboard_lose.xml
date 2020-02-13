@@ -9,72 +9,75 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="40dp"
-    android:id="@+id/scoreboardScore">
-        <TextView
-            android:id="@+id/coding_user_score"
-            android:layout_width="wrap_content"
+
+        <RelativeLayout
+            android:id="@+id/scoreboardScore"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/coding_score"
-            android:layout_marginTop="35dp"
-            android:layout_toStartOf="@id/coding_score"
-            android:text="0"
-            android:textColor="@color/colorSdRed"
-            android:textSize="45sp" />
+            android:layout_marginBottom="40dp">
+
+            <TextView
+                android:id="@+id/SB_lose_user_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/scoreBoard_semicolon"
+                android:layout_marginTop="35dp"
+                android:layout_toStartOf="@id/scoreBoard_semicolon"
+                android:text="0"
+                android:textColor="@color/colorSdRed"
+                android:textSize="45sp" />
+
+            <TextView
+                android:id="@+id/scoreBoard_semicolon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="10dp"
+                android:text=":"
+                android:textSize="45sp" />
+
+            <TextView
+                android:id="@+id/SB_lose_another_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/scoreBoard_semicolon"
+                android:layout_marginTop="35dp"
+                android:layout_toEndOf="@id/scoreBoard_semicolon"
+                android:text="0"
+                android:textColor="@color/colorLightBlue"
+                android:textSize="45sp" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/coding_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="35dp"
-            android:layout_marginEnd="10dp"
-            android:text=":"
-            android:textSize="45sp" />
-
-        <TextView
-            android:id="@+id/coding_another_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/coding_score"
-            android:layout_marginTop="35dp"
-            android:layout_toEndOf="@id/coding_score"
-            android:text="0"
-            android:textColor="@color/colorLightBlue"
-            android:textSize="45sp" />
-</RelativeLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="You Lost :("
-            android:textSize="30sp"
             android:id="@+id/scoreboardLostText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/scoreboardScore"
-            android:layout_marginLeft="40dp"/>
+            android:layout_marginLeft="40dp"
+            android:text="You Lost :("
+            android:textSize="30sp" />
 
         <ImageView
+            android:id="@+id/scoreboardFunPic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/scoreboardLostText"
             android:layout_alignTop="@+id/scoreboardLostText"
-            android:id="@+id/scoreboardFunPic"/>
+            android:layout_toRightOf="@+id/scoreboardLostText" />
 
         <Button
+            android:id="@+id/scoreboardCrap"
             android:layout_width="160dp"
-            android:backgroundTint="@color/colorLightBlue"
             android:layout_height="60dp"
+            android:layout_below="@+id/scoreboardLostText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:backgroundTint="@color/colorLightBlue"
             android:text="Crap!"
-            android:textSize="24sp"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/scoreboardLostText"
-            android:layout_marginTop="100dp"
+            android:textSize="24sp"
 
             />
     </RelativeLayout>

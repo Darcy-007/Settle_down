@@ -25,12 +25,15 @@ class MainActivity : AppCompatActivity(),
     TypingGameFragment.OnTypingGameFragmentInteractionListener,
     DiceGameFragment.OnDiceGameFragmentInteractionListener,
     WaitingAnotherInGameFragment.OnWAIGFragmentInteractionListener,
-ScoreboardFragment.OnScoreboardFragmentInteractionListener{
+    ScoreboardFragment.OnScoreboardFragmentInteractionListener,
+    HistoryFragment.OnHistoryFragmentInteractionListener {
+
 
 
     private val auth = FirebaseAuth.getInstance()
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     private val RC_SIGN_IN = 1
+    private lateinit var user: FirebaseUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,13 +59,14 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
             true
         }
     }
+
     override fun showTestSoftKeyboard(view: View) {
         Log.d("KEYBOARD", "Show")
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         view.requestFocus()
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
         view.setOnKeyListener { v, keyCode, event ->
-//            Log.d("CODE!!!!", keyCode.toString())
+            //            Log.d("CODE!!!!", keyCode.toString())
             true
         }
     }
@@ -83,9 +87,9 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
         // and goes back to the Splash fragment otherwise.
         // See https://firebase.google.com/docs/auth/users#the_user_lifecycle
         authStateListener = FirebaseAuth.AuthStateListener { auth: FirebaseAuth ->
-            val user = auth.currentUser
-            Log.d(Constants.TAG, "In anth listener, user = $user")
-            if (user != null) {
+
+            if (auth.currentUser != null) {
+                user = auth.currentUser!!
                 Log.d(Constants.TAG, "UID: ${user.uid}")
                 Log.d(Constants.TAG, "Name: ${user.displayName}")
                 Log.d(Constants.TAG, "Email: ${user.email}")
@@ -182,44 +186,64 @@ ScoreboardFragment.OnScoreboardFragmentInteractionListener{
 
     override fun onCodingGameFragmentInteraction(mr: MatchResult, isChallenger: Boolean) {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_container, WaitingAnotherInGameFragment.newInstance(mr, isChallenger))
+        ft.replace(
+            R.id.fragment_container,
+            WaitingAnotherInGameFragment.newInstance(mr, isChallenger)
+        )
         ft.commit()
     }
 
-    override fun onTypingGameFragmentInteraction(mr:MatchResult, isWinner:Boolean) {
+    override fun onTypingGameFragmentInteraction(mr: MatchResult, isWinner: Boolean) {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr, isWinner))
         ft.commit()
     }
 
-    override fun onDiceGameFragmentInteraction(mr:MatchResult, isWinner:Boolean) {
+    override fun onDiceGameFragmentInteraction(mr: MatchResult, isWinner: Boolean) {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr, isWinner))
-        ft.commit()    }
+        ft.commit()
+    }
 
-    override fun onScoreboardFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onScoreboardFragmentInteraction() {
+        switchToHomeFragment(user!!)
     }
 
     override fun onWAIGFragmentInteraction(mr: MatchResult?, isChalllenger: Boolean?) {
         val ft = supportFragmentManager.beginTransaction()
-        val myId = if(isChalllenger!!) mr!!.challenger else mr!!.receiver
-        val anotherId = if(isChalllenger) mr.receiver else mr.challenger
-        val myResult:Boolean
-        if(mr.challengerScore>mr.receiverScore){
-            myResult = if(isChalllenger) true else false
-        }else if(mr.receiverScore>mr.challengerScore){
-            myResult = if(isChalllenger) false else true
-        }else{
-            if(mr.winner == myId){
+        val myId = if (isChalllenger!!) mr!!.challenger else mr!!.receiver
+        val anotherId = if (isChalllenger) mr.receiver else mr.challenger
+        val myResult: Boolean
+        if (mr.challengerScore > mr.receiverScore) {
+            myResult = if (isChalllenger) true else false
+        } else if (mr.receiverScore > mr.challengerScore) {
+            myResult = if (isChalllenger) false else true
+        } else {
+            if (mr.winner == myId) {
                 mr.winner = anotherId
                 myResult = false
-            }else{
+            } else {
                 mr.winner = myId
                 myResult = true
             }
         }
         ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr!!, myResult))
+        ft.commit()
+    }
+
+    override fun onHomeFragmentToHistory(user: FirebaseUser) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, HistoryFragment.newInstance(user))
+        ft.addToBackStack("detail")
+        ft.commit()
+    }
+
+    override fun onHistoryFragmentInteraction() {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, HomeFragment.newInstance(user))
+        while(supportFragmentManager.backStackEntryCount>0){
+            supportFragmentManager.popBackStackImmediate()
+        }
         ft.commit()
     }
 

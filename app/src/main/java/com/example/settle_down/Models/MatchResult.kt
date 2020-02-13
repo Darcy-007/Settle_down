@@ -23,7 +23,7 @@ data class MatchResult(
     var numCompleted: Int = 0
     ): Parcelable {
     @get:Exclude var id = ""
-//    @ServerTimestamp var Date: Timestamp? = null
+    @ServerTimestamp var Date: Timestamp? = null
     companion object {
         const val LAST_TOUCHED_KEY = "lastTouched"
 
