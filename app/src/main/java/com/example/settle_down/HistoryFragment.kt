@@ -3,6 +3,7 @@ package com.example.settle_down
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.settle_down.Models.MatchResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.Query
+import kotlinx.android.synthetic.main.fragment_history.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,12 +34,24 @@ private const val ARG_PARAM2 = "param2"
 class HistoryFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var user: FirebaseUser? = null
+    private val auth = FirebaseAuth.getInstance()
+    private val mrList = ArrayList<MatchResult>()
+
     private var listener: OnHistoryFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             user = it.getParcelable(ARG_PARAM1)
+        }
+        FirestoreDataManager.matchresultRef.orderBy(MatchResult.LAST_TOUCHED_KEY, Query.Direction.ASCENDING).get().addOnCompleteListener {
+            for(document in it.result!!.documents){
+                val doc = MatchResult.matchResultFromSnapshot(document)
+
+                if(doc.challenger==user!!.uid||doc.receiver==user!!.uid) {
+                    mrList.add(MatchResult.matchResultFromSnapshot(document))
+                }
+            }
         }
     }
 
@@ -44,18 +61,26 @@ class HistoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_history, container, false)
-        if (view is RecyclerView) {
-            with(view) {
+        if (view.list is RecyclerView) {
+            with(view.list) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = HistoryFragmentAdapter(context)
-                view.setHasFixedSize(true)
-                view.addItemDecoration(
+                adapter = HistoryFragmentAdapter(mrList)
+                Log.d("Is Recycler?", "Yes")
+//
+            }
+            view.list.setHasFixedSize(true)
+                view.list.addItemDecoration(
                     DividerItemDecoration(
                         context,
                         DividerItemDecoration.VERTICAL
                     )
                 )
-            }
+        }
+        view.log_out.setOnClickListener {
+            auth.signOut()
+        }
+        view.history_back_button.setOnClickListener {
+            listener!!.onHistoryFragmentInteraction()
         }
         return view
     }
@@ -70,10 +95,6 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
 
     /**
      * This interface must be implemented by activities that contain this

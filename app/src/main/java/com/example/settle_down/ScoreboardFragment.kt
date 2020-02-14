@@ -52,7 +52,7 @@ class ScoreboardFragment : Fragment() {
             view!!.SB_win_user_score.text = mr!!.challengerScore.toString()
             view!!.SB_win_another_score.text = mr!!.receiverScore.toString()
             view!!.scoreboardNice.setOnClickListener {
-                var event = view!!.scoreboardMakeDecision.text.toString()
+                var event = view!!.event.text.toString()
                 if(event.isEmpty()){
                     event = "Nothing Special"
                 }

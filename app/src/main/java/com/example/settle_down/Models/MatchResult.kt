@@ -23,10 +23,10 @@ data class MatchResult(
     var numCompleted: Int = 0
     ): Parcelable {
     @get:Exclude var id = ""
-    @ServerTimestamp var Date: Timestamp? = null
+    @ServerTimestamp var date: Timestamp? = null
     companion object {
-        const val LAST_TOUCHED_KEY = "lastTouched"
 
+        const val LAST_TOUCHED_KEY = "date"
         fun matchResultFromSnapshot(snapshot: DocumentSnapshot): MatchResult {
             val match_result = snapshot.toObject(MatchResult::class.java)!!
             match_result.id = snapshot.id

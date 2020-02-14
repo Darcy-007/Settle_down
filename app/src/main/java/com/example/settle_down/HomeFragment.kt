@@ -47,7 +47,6 @@ class HomeFragment : Fragment(){
 
     private var user: FirebaseUser? = null
     private var uname: String? = null
-    private val auth = FirebaseAuth.getInstance()
     //    private var param2: String? = null
     private var listener: OnHomeFragmentInteractionListener? = null
 
@@ -120,7 +119,7 @@ class HomeFragment : Fragment(){
 //            Log.d("CODE!!!!", keyCode.toString())
 //            true
 //        }
-        view.setOnClickListener {
+        view.imageView.setOnClickListener {
             listener!!.onHomeFragmentToHistory(user!!)
         }
 
@@ -146,10 +145,7 @@ class HomeFragment : Fragment(){
 
             builder.show()
         }
-        view.imageView.setOnClickListener {
-            Log.d(Constants.TAG, "I'm pressed")
-            auth.signOut()
-        }
+
         return view
     }
 

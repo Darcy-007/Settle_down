@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:textAppearance="?attr/textAppearanceListItem"
+            android:text="What??"
             android:textSize="24sp" />
 
         <TextView
