@@ -49,7 +49,7 @@ class WaitingAnotherInGameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_waiting, container, false)
+        val view = inflater.inflate(R.layout.fragment_waiting_another_in_game, container, false)
         FirestoreDataManager.matchresultRef.addSnapshotListener{ snapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
             if(firebaseFirestoreException != null){
                 Log.e(Constants.TAG, "Listen error: $firebaseFirestoreException")
@@ -119,7 +119,7 @@ class WaitingAnotherInGameFragment : Fragment() {
          */
         @JvmStatic
         fun newInstance(mr: MatchResult, isChalllenger: Boolean) =
-            WaitingFragment().apply {
+            WaitingAnotherInGameFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_MR, mr)
                     putBoolean(ARG_ISCHALLENGER, isChalllenger)
