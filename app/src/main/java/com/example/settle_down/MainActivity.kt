@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity(),
     HistoryFragment.OnHistoryFragmentInteractionListener {
 
 
-
     private val auth = FirebaseAuth.getInstance()
     lateinit var authStateListener: FirebaseAuth.AuthStateListener
     private val RC_SIGN_IN = 1
@@ -212,24 +211,19 @@ class MainActivity : AppCompatActivity(),
     override fun onWAIGFragmentInteraction(mr: MatchResult?, isChalllenger: Boolean?) {
         val ft = supportFragmentManager.beginTransaction()
         val myId = if (isChalllenger!!) mr!!.challenger else mr!!.receiver
-        val anotherId = if (isChalllenger) mr.receiver else mr.challenger
-        val myResult: Boolean
-        if (mr.challengerScore > mr.receiverScore) {
-            myResult = if (isChalllenger) true else false
-        } else if (mr.receiverScore > mr.challengerScore) {
-            myResult = if (isChalllenger) false else true
-        } else {
-            if (mr.winner == myId) {
-                mr.winner = anotherId
-                myResult = false
-            } else {
-                mr.winner = myId
-                myResult = true
-            }
-        }
+        val myResult: Boolean = mr.winner == myId
         ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr!!, myResult))
         ft.commit()
     }
+
+    override fun onFinishedInteraction(mr: MatchResult, result: Boolean) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr!!, result))
+        mr.numCompleted = -1
+        FirestoreDataManager.matchresultRef.document(mr.id).set(mr!!)
+        ft.commit()
+    }
+
 
     override fun onHomeFragmentToHistory(user: FirebaseUser) {
         val ft = supportFragmentManager.beginTransaction()

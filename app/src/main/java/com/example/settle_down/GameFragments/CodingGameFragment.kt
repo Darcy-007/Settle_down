@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import com.example.settle_down.Constants
 import com.example.settle_down.Models.MatchResult
 import com.example.settle_down.R
+import com.example.settle_down.ScoreboardFragment
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.fragment_coding_game.view.*
 
@@ -110,20 +111,39 @@ class CodingGameFragment : Fragment() {
     private fun incomingUpdate(match: MatchResult, view: View) {
         updateText(match, view)
         mr = match
-        if(match.winner.equals(playId)){
+        if(match.winner.equals(playId) && match.numCompleted == 1){
             Log.d(Constants.TAG, "Finished!")
             listener!!.onCodingGameFragmentInteraction(mr!!,isChallenger!!)
-        }else if(!match.winner.isEmpty()){
+        }else if(match.winner.equals(playId) && match.numCompleted == 2){
+            Log.d(Constants.TAG, "Finished!")
+            twoFinished(match)
+        }
+        else if(!match.winner.isEmpty()){
             Log.d(Constants.TAG, "another player finished")
         }else{
             Log.d(Constants.TAG, "only update score")
 
         }
-//        else{
-//            Log.d(Constants.TAG, "Update Text!")
-////            updateText(match, view)
-//            mr = match
-//        }
+    }
+
+    fun twoFinished(mr: MatchResult) {
+//        val myId = if (isChalllenger!!) mr!!.challenger else mr!!.receiver
+        val anotherId = if (isChallenger!!) mr.receiver else mr.challenger
+        val myResult: Boolean
+        if (mr.challengerScore > mr.receiverScore) {
+            myResult = if (isChallenger!!) true else false
+        } else if (mr.receiverScore > mr.challengerScore) {
+            myResult = if (isChallenger!!) false else true
+        } else {
+            if (mr.winner == playId) {
+                mr.winner = anotherId
+                myResult = false
+            } else {
+                mr.winner = playId!!
+                myResult = true
+            }
+        }
+        listener!!.onFinishedInteraction(mr, myResult)
     }
 
     private fun setProblem(view: View){
@@ -239,6 +259,7 @@ class CodingGameFragment : Fragment() {
      */
     interface OnCodingGameFragmentInteractionListener {
         fun onCodingGameFragmentInteraction(mr: MatchResult, isChallenger:Boolean)
+        fun onFinishedInteraction(mr: MatchResult, result:Boolean)
     }
 
     companion object {
