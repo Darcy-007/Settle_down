@@ -204,6 +204,15 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
+    override fun onToWaitingFragmentInteraction(mr: MatchResult) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(
+            R.id.fragment_container,
+            WaitingAnotherInGameFragment.newInstance(mr, isChallenger)
+        )
+        ft.commit()
+    }
+
     override fun onScoreboardFragmentInteraction() {
         switchToHomeFragment(user!!)
     }

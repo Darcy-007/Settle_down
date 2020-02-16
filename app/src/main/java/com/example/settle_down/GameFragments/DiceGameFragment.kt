@@ -37,6 +37,7 @@ class DiceGameFragment : Fragment() {
     private var mr: MatchResult? = null
     private var isChallenger: Boolean? = null
     private var listener: OnDiceGameFragmentInteractionListener? = null
+    private var isFirst: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,10 +53,10 @@ class DiceGameFragment : Fragment() {
             for (docChange in querySnapshot!!.documentChanges) {
                 val change = MatchResult.matchResultFromSnapshot(docChange.document)
                 if (change.id == mr!!.id) {
-
+                    isFirst = false
+                    mr = change
                 }
             }
-
         }
     }
 
@@ -71,77 +72,123 @@ class DiceGameFragment : Fragment() {
         val total = 21
         view.Dice1.setImageResource(randomDieImg(currentValue))
         view.DiceGameValue.text = "Your Current Value Is: $currentValue"
-        var idArray = arrayListOf<ImageView>(view.Dice1,view.Dice2, view.Dice3, view.Dice4, view.Dice5, view.Dice6, view.Dice7, view.Dice8, view.Dice9, view.Dice10, view.Dice11,
-            view.Dice12, view.Dice13, view.Dice14, view.Dice15, view.Dice16, view.Dice17, view.Dice18, view.Dice19, view.Dice20, view.Dice21)
+        var idArray = arrayListOf<ImageView>(
+            view.Dice1,
+            view.Dice2,
+            view.Dice3,
+            view.Dice4,
+            view.Dice5,
+            view.Dice6,
+            view.Dice7,
+            view.Dice8,
+            view.Dice9,
+            view.Dice10,
+            view.Dice11,
+            view.Dice12,
+            view.Dice13,
+            view.Dice14,
+            view.Dice15,
+            view.Dice16,
+            view.Dice17,
+            view.Dice18,
+            view.Dice19,
+            view.Dice20,
+            view.Dice21
+        )
         view.DiceGameAddOne.setOnClickListener {
             var imgView = idArray[currentIndex]
             var new = rollRandomDie()
             imgView.setImageResource(randomDieImg(new))
-            currentValue+=new
+            currentValue += new
             currentIndex++
             view.DiceGameValue.text = "Your Current Value Is: $currentValue"
             //if all go over 21, the first one goes over
-            if(currentValue >21){
-                view.DiceGameValue.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdRed))
-                if(isChallenger!!){
-                    mr!!.challengerScore = 0
-                    mr!!.winner = mr!!.challenger
-                }else{
-                    mr!!.receiverScore = 0
-                    mr!!.winner = mr!!.receiver
+            if (currentValue > 21) {
+                view.DiceGameValue.setTextColor(
+                    ContextCompat.getColor(
+                        context!!,
+                        R.color.colorSdRed
+                    )
+                )
+                if (isChallenger!!) {
+                    mr!!.challengerScore = currentValue
+                } else {
+                    mr!!.receiverScore = currentValue
                 }
-                FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!).addOnSuccessListener {
-                    if(mr!!.winner.isNotEmpty()){
-                        listener!!.onDiceGameFragmentInteraction(mr!!, true)
-                    }else{
+                if (isFirst) {
+                    FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!)
+                        .addOnSuccessListener {
+                            listener!!.onToWaitingFragmentInteraction(mr!!)
+                        }
+                } else {
+                    var otherUid = if (isChallenger!!) mr!!.receiver else mr!!.challenger
+                    mr!!.winner = otherUid
+                    FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!)
+                        .addOnSuccessListener {
+                            listener!!.onDiceGameFragmentInteraction(mr!!, false)
+                        }
+                }
 
-                    }
-                }
-            }else if(currentValue in 18..21){
-                view.DiceGameValue.setTextColor(ContextCompat.getColor(context!!, R.color.colorSdGreen))
+            } else if (currentValue in 16..21) {
+                view.DiceGameValue.setTextColor(
+                    ContextCompat.getColor(
+                        context!!,
+                        R.color.colorSdGreen
+                    )
+                )
             }
         }
 
         view.DiceGameSubmit.setOnClickListener {
-            if(isChallenger!!){
-                mr!!.challengerScore = currentValue
-                if(mr!!.winner.isNotEmpty()){
-                    if(mr!!.receiverScore<mr!!.challengerScore){
-                        mr!!.winner = mr!!.challenger
+            var uid = if (isChallenger!!) mr!!.challenger else mr!!.receiver
+            if(isFirst) {
+                if (isChallenger!!) {
+                    mr!!.challengerScore = currentValue
+                } else {
+                    mr!!.receiverScore = currentValue
+                }
+                mr!!.winner = uid
+                FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!)
+                    .addOnSuccessListener {
+                            listener!!.onToWaitingFragmentInteraction(mr!!)
+
                     }
-                }else{
-                    mr!!.winner = mr!!.challenger
-                }
-            }else{
-                mr!!.receiverScore = currentValue
-                if(mr!!.winner.isNotEmpty()){
-                    if(mr!!.receiverScore>mr!!.challengerScore){
-                        mr!!.winner = mr!!.receiver
+            }else {
+                var winOrLose = false
+                if (isChallenger!!) {
+                    mr!!.challengerScore = currentValue
+                    if (mr!!.winner != uid) {
+                        if (currentValue > mr!!.receiverScore) {
+                            mr!!.winner = uid
+                            winOrLose = true
+                        }
                     }
-                }else{
-                    mr!!.winner = mr!!.receiver
+                } else {
+                    mr!!.receiverScore = currentValue
+                    if (mr!!.winner != uid) {
+                        if (currentValue > mr!!.challengerScore) {
+                            mr!!.winner = uid
+                            winOrLose = true
+                        }
+                    }
                 }
+                mr!!.winner = uid
+                FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!)
+                    .addOnSuccessListener {
+                        listener!!.onDiceGameFragmentInteraction(mr!!, winOrLose)
+                    }
             }
-            FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!).addOnSuccessListener {
-                if(mr!!.winner.isNotEmpty()){
-                    listener!!.onDiceGameFragmentInteraction(mr!!, true)
-                }else{
-
-                }
-            }
-
-
-
         }
 
         return view
     }
 
-    private fun rollRandomDie():Int{
-        return Random.nextInt(1,7)
+    private fun rollRandomDie(): Int {
+        return Random.nextInt(1, 7)
     }
-    private fun randomDieImg(die:Int): Int{
-        return when(die){
+
+    private fun randomDieImg(die: Int): Int {
+        return when (die) {
             1 -> R.drawable.dice1
             2 -> R.drawable.dice2
             3 -> R.drawable.dice3
@@ -174,7 +221,8 @@ class DiceGameFragment : Fragment() {
      */
     interface OnDiceGameFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onDiceGameFragmentInteraction(mr:MatchResult, isWinner: Boolean)
+        fun onDiceGameFragmentInteraction(mr: MatchResult, isWinner: Boolean)
+        fun onToWaitingFragmentInteraction(mr:MatchResult)
     }
 
     companion object {

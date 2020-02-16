@@ -44,15 +44,7 @@ class HistoryFragment : Fragment() {
         arguments?.let {
             user = it.getParcelable(ARG_PARAM1)
         }
-        FirestoreDataManager.matchresultRef.orderBy(MatchResult.LAST_TOUCHED_KEY, Query.Direction.ASCENDING).get().addOnCompleteListener {
-            for(document in it.result!!.documents){
-                val doc = MatchResult.matchResultFromSnapshot(document)
 
-                if(doc.challenger==user!!.uid||doc.receiver==user!!.uid) {
-                    mrList.add(MatchResult.matchResultFromSnapshot(document))
-                }
-            }
-        }
     }
 
     override fun onCreateView(
@@ -61,20 +53,30 @@ class HistoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_history, container, false)
-        if (view.list is RecyclerView) {
-            with(view.list) {
-                layoutManager = LinearLayoutManager(context)
-                adapter = HistoryFragmentAdapter(mrList)
-                Log.d("Is Recycler?", "Yes")
-//
+        FirestoreDataManager.matchresultRef.orderBy(MatchResult.LAST_TOUCHED_KEY, Query.Direction.ASCENDING).get().addOnCompleteListener {
+            for (document in it.result!!.documents) {
+                val doc = MatchResult.matchResultFromSnapshot(document)
+
+                if (doc.challenger == user!!.uid || doc.receiver == user!!.uid&&(doc.eventResolved.isNotEmpty())) {
+                    mrList.add(MatchResult.matchResultFromSnapshot(document))
+                }
             }
-            view.list.setHasFixedSize(true)
+
+            if (view.list is RecyclerView) {
+                with(view.list) {
+                    layoutManager = LinearLayoutManager(context)
+                    adapter = HistoryFragmentAdapter(user!!, mrList, context)
+                    Log.d("Is Recycler?", mrList.toString())
+//
+                }
+                view.list.setHasFixedSize(true)
                 view.list.addItemDecoration(
                     DividerItemDecoration(
                         context,
                         DividerItemDecoration.VERTICAL
                     )
                 )
+            }
         }
         view.log_out.setOnClickListener {
             auth.signOut()

@@ -30,7 +30,7 @@ private const val ARG_ISCHALLENGER = "WAIGIC"
  */
 class WaitingAnotherInGameFragment : Fragment() {
     private var mr: MatchResult? = null
-    private var isChalllenger: Boolean? = null
+    private var isChallenger: Boolean? = null
     private var listener: OnWAIGFragmentInteractionListener? = null
     private var playId:String? = null
 
@@ -38,9 +38,9 @@ class WaitingAnotherInGameFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             mr = it.getParcelable(ARG_MR)
-            isChalllenger = it.getBoolean(ARG_ISCHALLENGER)
+            isChallenger = it.getBoolean(ARG_ISCHALLENGER)
         }
-        playId = if (isChalllenger!!) mr!!.challenger else mr!!.receiver
+        playId = if (isChallenger!!) mr!!.challenger else mr!!.receiver
 
     }
 
@@ -77,7 +77,7 @@ class WaitingAnotherInGameFragment : Fragment() {
             Log.d(Constants.TAG, "Another player FINISHED")
         }else if(match.numCompleted == -1){
             Log.d(Constants.TAG, "numCompleted is -1")
-            listener!!.onWAIGFragmentInteraction(mr, isChalllenger)
+            listener!!.onWAIGFragmentInteraction(mr, isChallenger)
         }
     }
 

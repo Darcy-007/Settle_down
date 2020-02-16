@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.DocumentChange
@@ -18,13 +19,14 @@ import kotlinx.android.synthetic.main.fragment_history.view.*
 import kotlinx.android.synthetic.main.fragment_historylist.view.*
 
 class HistoryFragmentAdapter(
-    private val mrList: List<MatchResult>
+    private val user: FirebaseUser,
+    private val mrList: List<MatchResult>,
+    private val context: Context
 ) : RecyclerView.Adapter<HistoryFragmentAdapter.ViewHolder>() {
 
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-Log.d("Why???", "")
+        Log.d("Why???", "")
         val view = LayoutInflater.from(parent.list.context)
             .inflate(R.layout.fragment_historylist, parent, false)
         return ViewHolder(view)
@@ -34,9 +36,22 @@ Log.d("Why???", "")
         val item = mrList[position]
         Log.d("Why??", item.toString())
 
-        holder.mEvent.text = if(item.eventResolved.length < 60)  (if(item.eventResolved.length<36) item.eventResolved+"\n" else item.eventResolved) else item.eventResolved.substring(0,50)+" ..."
-        holder.mDate.text = item.date.toString()
-        holder.mWinner.text = item.winner
+        holder.mEvent.text =
+            if (item.eventResolved.length < 60) (if (item.eventResolved.length < 36) item.eventResolved + "\n" else item.eventResolved) else item.eventResolved.substring(
+                0,
+                50
+            ) + " ..."
+        if(item.date != null){
+            holder.mDate.text = item.date!!.toDate().toString()
+        }
+        if(user.uid == item.winner) {
+            holder.mWinner.text = "Won"
+            holder.mWinner.setTextColor(ContextCompat.getColor(context, R.color.colorLightBlue))
+        } else {
+            holder.mWinner.text = "Lost"
+            holder.mWinner.setTextColor(ContextCompat.getColor(context, R.color.colorSdRed))
+
+        }
         with(holder.mView) {
             tag = item
         }
