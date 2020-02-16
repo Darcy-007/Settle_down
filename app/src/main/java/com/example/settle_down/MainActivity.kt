@@ -204,7 +204,7 @@ class MainActivity : AppCompatActivity(),
         ft.commit()
     }
 
-    override fun onToWaitingFragmentInteraction(mr: MatchResult) {
+    override fun onToWaitingFragmentInteraction(mr: MatchResult, isChallenger: Boolean) {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(
             R.id.fragment_container,
@@ -217,9 +217,9 @@ class MainActivity : AppCompatActivity(),
         switchToHomeFragment(user!!)
     }
 
-    override fun onWAIGFragmentInteraction(mr: MatchResult?, isChalllenger: Boolean?) {
+    override fun onWAIGFragmentInteraction(mr: MatchResult?, isChallenger: Boolean?) {
         val ft = supportFragmentManager.beginTransaction()
-        val myId = if (isChalllenger!!) mr!!.challenger else mr!!.receiver
+        val myId = if (isChallenger!!) mr!!.challenger else mr!!.receiver
         val myResult: Boolean = mr.winner == myId
         ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr!!, myResult))
         ft.commit()

@@ -50,11 +50,13 @@ class DiceGameFragment : Fragment() {
             if (firebaseFirestoreException != null) {
                 Log.e("error", "Listen error: $firebaseFirestoreException")
             }
+            Log.d("mr1", mr.toString())
             for (docChange in querySnapshot!!.documentChanges) {
                 val change = MatchResult.matchResultFromSnapshot(docChange.document)
-                if (change.id == mr!!.id) {
+                if (change.id == mr!!.id&&docChange.type == DocumentChange.Type.MODIFIED) {
                     isFirst = false
                     mr = change
+                    Log.d("mr2", mr.toString())
                 }
             }
         }
@@ -118,13 +120,15 @@ class DiceGameFragment : Fragment() {
                 if (isFirst) {
                     FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!)
                         .addOnSuccessListener {
-                            listener!!.onToWaitingFragmentInteraction(mr!!)
+                            listener!!.onToWaitingFragmentInteraction(mr!!, isChallenger!!)
                         }
                 } else {
                     var otherUid = if (isChallenger!!) mr!!.receiver else mr!!.challenger
                     mr!!.winner = otherUid
+                    mr!!.numCompleted = -1
                     FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!)
                         .addOnSuccessListener {
+
                             listener!!.onDiceGameFragmentInteraction(mr!!, false)
                         }
                 }
@@ -150,7 +154,7 @@ class DiceGameFragment : Fragment() {
                 mr!!.winner = uid
                 FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!)
                     .addOnSuccessListener {
-                            listener!!.onToWaitingFragmentInteraction(mr!!)
+                            listener!!.onToWaitingFragmentInteraction(mr!!, isChallenger!!)
 
                     }
             }else {
@@ -158,7 +162,7 @@ class DiceGameFragment : Fragment() {
                 if (isChallenger!!) {
                     mr!!.challengerScore = currentValue
                     if (mr!!.winner != uid) {
-                        if (currentValue > mr!!.receiverScore) {
+                        if (currentValue > mr!!.receiverScore||mr!!.receiverScore>21) {
                             mr!!.winner = uid
                             winOrLose = true
                         }
@@ -166,13 +170,14 @@ class DiceGameFragment : Fragment() {
                 } else {
                     mr!!.receiverScore = currentValue
                     if (mr!!.winner != uid) {
-                        if (currentValue > mr!!.challengerScore) {
+                        if (currentValue > mr!!.challengerScore||mr!!.challengerScore>21) {
                             mr!!.winner = uid
                             winOrLose = true
                         }
                     }
                 }
                 mr!!.winner = uid
+                mr!!.numCompleted = -1
                 FirestoreDataManager.matchresultRef.document(mr!!.id).set(mr!!)
                     .addOnSuccessListener {
                         listener!!.onDiceGameFragmentInteraction(mr!!, winOrLose)
@@ -222,7 +227,7 @@ class DiceGameFragment : Fragment() {
     interface OnDiceGameFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onDiceGameFragmentInteraction(mr: MatchResult, isWinner: Boolean)
-        fun onToWaitingFragmentInteraction(mr:MatchResult)
+        fun onToWaitingFragmentInteraction(mr:MatchResult, isChallenger: Boolean)
     }
 
     companion object {

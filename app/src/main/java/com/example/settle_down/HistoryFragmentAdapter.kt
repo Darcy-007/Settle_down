@@ -52,6 +52,24 @@ class HistoryFragmentAdapter(
             holder.mWinner.setTextColor(ContextCompat.getColor(context, R.color.colorSdRed))
 
         }
+        holder.mGameType.text = when(item.gameType){
+            0->{
+                "Math Game"
+            }
+            1->{
+                "Coding Game"
+            }
+            2->{
+                "Typing Game"
+            }
+            3->{
+                "Dice Game"
+            }
+            else->{
+                ""
+            }
+
+        }
         with(holder.mView) {
             tag = item
         }
@@ -63,6 +81,7 @@ class HistoryFragmentAdapter(
         val mEvent: TextView = mView.historyFragmentEvent
         val mDate: TextView = mView.date
         val mWinner: TextView = mView.winner
+        val mGameType: TextView = mView.gameType
 
     }
 }

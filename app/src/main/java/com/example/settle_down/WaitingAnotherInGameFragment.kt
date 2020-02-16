@@ -77,7 +77,7 @@ class WaitingAnotherInGameFragment : Fragment() {
             Log.d(Constants.TAG, "Another player FINISHED")
         }else if(match.numCompleted == -1){
             Log.d(Constants.TAG, "numCompleted is -1")
-            listener!!.onWAIGFragmentInteraction(mr, isChallenger)
+            listener!!.onWAIGFragmentInteraction(match, isChallenger)
         }
     }
 
@@ -89,11 +89,7 @@ class WaitingAnotherInGameFragment : Fragment() {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
     }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
+    
 
     /**
      * This interface must be implemented by activities that contain this

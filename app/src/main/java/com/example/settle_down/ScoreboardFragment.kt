@@ -37,6 +37,7 @@ class ScoreboardFragment : Fragment() {
             mr = it.getParcelable(ARG_PARAM1)
             isWinner = it.getBoolean(ARG_PARAM2)
         }
+
     }
 
     override fun onCreateView(
@@ -49,8 +50,8 @@ class ScoreboardFragment : Fragment() {
         var view:View?
         if(isWinner!!) {
             view = inflater.inflate(R.layout.fragment_scoreboard_win, container, false)
-            view!!.SB_win_user_score.text = mr!!.challengerScore.toString()
-            view!!.SB_win_another_score.text = mr!!.receiverScore.toString()
+            view!!.SB_win_user_score.text = if(mr!!.challengerScore>21) mr!!.challengerScore.toString()+"(X)" else mr!!.challengerScore.toString()
+            view!!.SB_win_another_score.text = if(mr!!.receiverScore>21) mr!!.receiverScore.toString()+"(X)" else mr!!.receiverScore.toString()
             view!!.scoreboardNice.setOnClickListener {
                 var event = view!!.event.text.toString()
                 if(event.isEmpty()){
@@ -63,8 +64,8 @@ class ScoreboardFragment : Fragment() {
             }
         } else {
             view = inflater.inflate(R.layout.fragment_scoreboard_lose, container, false)
-            view!!.SB_lose_user_score.text = mr!!.receiverScore.toString()
-            view!!.SB_lose_another_score.text = mr!!.challengerScore.toString()
+            view!!.SB_lose_user_score.text = if(mr!!.receiverScore>21) mr!!.receiverScore.toString()+"(X)" else mr!!.receiverScore.toString()
+            view!!.SB_lose_another_score.text = if(mr!!.challengerScore>21) mr!!.challengerScore.toString()+"(X)" else mr!!.challengerScore.toString()
             view!!.scoreboardCrap.setOnClickListener {
                 listener!!.onScoreboardFragmentInteraction()
             }
