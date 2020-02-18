@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditText
-        android:id="@+id/roomcode"
+    <com.alimuzaffar.lib.pin.PinEntryEditText
+        android:id="@+id/code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter The Four Digit Code here"
+        android:cursorVisible="false"
+        android:digits="1234567890"
         android:inputType="number"
-        android:textSize="24sp"
-        android:importantForAutofill="no"
-        />
+        android:maxLength="4"
+        android:textIsSelectable="false"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        app:pinAnimationType="fromBottom"
+
+    />
 
 </RelativeLayout>

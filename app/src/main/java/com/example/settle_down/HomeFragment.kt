@@ -2,6 +2,7 @@ package com.example.settle_down
 
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -128,20 +129,21 @@ class HomeFragment : Fragment(){
         view.home_button.setOnClickListener {
             Log.d("AFTER" ,"Fine")
 
-            val builder = AlertDialog.Builder(context!!)
-            builder.setTitle("Enter Your Code Here")
+            val builder = AlertDialog.Builder(context!!).create()
+            builder.setTitle("Enter Your Secret Room Code Here")
             val view = LayoutInflater.from(context).inflate(
                 R.layout.enter_room_dialog, null, false
             )
             builder.setView(view)
-            builder.setIcon(android.R.drawable.ic_input_add)
-            builder.setPositiveButton(android.R.string.ok) { _, _ ->
-                val code = view.roomcode.text.toString()
-                waitOrJoin(code)
-            }
-            builder.setNegativeButton(android.R.string.cancel, null)
-//            builder.setOnClickListener {
+//            builder.setPositiveButton(android.R.string.ok) { _, _ ->
+//                val code = view.roomcode.text.toString()
+//                waitOrJoin(code)
 //            }
+            view.code.setOnPinEnteredListener {
+                builder.dismiss()
+                waitOrJoin(it.toString())
+
+            }
 
             builder.show()
         }
