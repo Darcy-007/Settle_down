@@ -134,17 +134,20 @@ class CodingGameFragment : Fragment() {
         val anotherId = if (isChallenger!!) mr.receiver else mr.challenger
         val myResult: Boolean
         if (mr.challengerScore > mr.receiverScore) {
-            myResult = if (isChallenger!!) true else false
+            myResult = isChallenger!!
+            mr.winner = mr.challenger
         } else if (mr.receiverScore > mr.challengerScore) {
-            myResult = if (isChallenger!!) false else true
+            myResult = !isChallenger!!
+            mr.winner = mr.receiver
         } else {
-            if (mr.winner == playId) {
+//            if (mr.winner == playId) {
                 mr.winner = anotherId
                 myResult = false
-            } else {
-                mr.winner = playId!!
-                myResult = true
-            }
+//            }
+//            else {
+//                mr.winner = playId!!
+//                myResult = true
+//            }
         }
         mr.numCompleted = -1
         FirestoreDataManager.matchresultRef.document(mr.id).set(mr!!).addOnCompleteListener{
