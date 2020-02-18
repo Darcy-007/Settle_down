@@ -71,9 +71,10 @@ class WaitingAnotherInGameFragment : Fragment() {
     }
 
     private fun incomingUpdate(match: MatchResult, view: View) {
+        Log.d(Constants.TAG, "numCompleted!!!!!! is ${match.numCompleted}")
         if (match.numCompleted == 1){
             Log.d(Constants.TAG, "Another player still not finished")
-        }else if((!match.winner.equals(playId)) || match.numCompleted == 2){
+        }else if(((!match.winner.equals(playId)) || match.numCompleted == 2) && match.numCompleted != -1){
             Log.d(Constants.TAG, "Another player FINISHED")
         }else if(match.numCompleted == -1){
             Log.d(Constants.TAG, "numCompleted is -1")

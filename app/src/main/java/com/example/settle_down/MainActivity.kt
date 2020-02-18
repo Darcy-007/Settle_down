@@ -228,8 +228,6 @@ class MainActivity : AppCompatActivity(),
     override fun onFinishedInteraction(mr: MatchResult, result: Boolean) {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_container, ScoreboardFragment.newInstance(mr!!, result))
-        mr.numCompleted = -1
-        FirestoreDataManager.matchresultRef.document(mr.id).set(mr!!)
         ft.commit()
     }
 

@@ -111,6 +111,9 @@ class CodingGameFragment : Fragment() {
     private fun incomingUpdate(match: MatchResult, view: View) {
         updateText(match, view)
         mr = match
+        Log.d(Constants.TAG, "++++++++++ $mr")
+        Log.d(Constants.TAG, "-----------$listener")
+        Log.d(Constants.TAG, "?????????${playId == match.winner}")
         if(match.winner.equals(playId) && match.numCompleted == 1){
             Log.d(Constants.TAG, "Finished!")
             listener!!.onCodingGameFragmentInteraction(mr!!,isChallenger!!)
@@ -118,16 +121,16 @@ class CodingGameFragment : Fragment() {
             Log.d(Constants.TAG, "Finished!")
             twoFinished(match)
         }
-        else if(!match.winner.isEmpty()){
-            Log.d(Constants.TAG, "another player finished")
-        }else{
+//        else if(!match.winner.equals(playId) && match.numCompleted == 2){
+//            Log.d(Constants.TAG, "Finished!")
+//            listener!!.onCodingGameFragmentInteraction(mr!!,isChallenger!!)
+//        }
+        else{
             Log.d(Constants.TAG, "only update score")
-
         }
     }
 
     fun twoFinished(mr: MatchResult) {
-//        val myId = if (isChalllenger!!) mr!!.challenger else mr!!.receiver
         val anotherId = if (isChallenger!!) mr.receiver else mr.challenger
         val myResult: Boolean
         if (mr.challengerScore > mr.receiverScore) {
@@ -143,7 +146,10 @@ class CodingGameFragment : Fragment() {
                 myResult = true
             }
         }
-        listener!!.onFinishedInteraction(mr, myResult)
+        mr.numCompleted = -1
+        FirestoreDataManager.matchresultRef.document(mr.id).set(mr!!).addOnCompleteListener{
+            listener!!.onFinishedInteraction(mr, myResult)
+        }
     }
 
     private fun setProblem(view: View){
@@ -193,11 +199,6 @@ class CodingGameFragment : Fragment() {
             }
             if(currentQuestion == 2){
                 mr!!.numCompleted+=1
-                if(isChallenger!!){
-                    mr!!.winner = mr!!.challenger
-                }else{
-                    mr!!.winner = mr!!.receiver
-                }
                 mr!!.winner = if (isChallenger!!) mr!!.challenger else mr!!.receiver
             }
             button.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorSdGreen))
@@ -241,10 +242,10 @@ class CodingGameFragment : Fragment() {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
+//    override fun onDetach() {
+//        super.onDetach()
+//        listener = null
+//    }
 
     /**
      * This interface must be implemented by activities that contain this
