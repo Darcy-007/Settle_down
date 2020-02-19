@@ -124,8 +124,6 @@ class HomeFragment : Fragment(){
             listener!!.onHomeFragmentToHistory(user!!)
         }
 
-
-//        view.imageView.setImageResource(R.drawable.ic_account_circle_black_24dp)
         view.home_button.setOnClickListener {
             Log.d("AFTER" ,"Fine")
 
@@ -135,10 +133,6 @@ class HomeFragment : Fragment(){
                 R.layout.enter_room_dialog, null, false
             )
             builder.setView(view)
-//            builder.setPositiveButton(android.R.string.ok) { _, _ ->
-//                val code = view.roomcode.text.toString()
-//                waitOrJoin(code)
-//            }
             view.code.setOnPinEnteredListener {
                 builder.dismiss()
                 waitOrJoin(it.toString())

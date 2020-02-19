@@ -219,22 +219,6 @@ class CodingGameFragment : Fragment() {
         }
     }
 
-    private fun startAnimation(view: View) {
-        val mProgressBar = view.coding_progressBar as ProgressBar
-        val progressAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 1000, 0)
-        progressAnimator.setDuration(5000)
-        progressAnimator.interpolator = LinearInterpolator()
-        progressAnimator.doOnEnd {
-            if(currentQuestion != 2){
-                currentQuestion+=1
-                setProblem(view)
-            }else{
-                Log.d(Constants.TAG, "last question")
-            }
-        }
-        progressAnimator.start()
-    }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

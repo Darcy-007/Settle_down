@@ -10,17 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/TypingSurrender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SURRENDER" />
 
         <TextView
             android:id="@+id/TypingTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/TypingSurrender"
             android:layout_margin="5dp"
             android:text="Please click on the text and type"
             android:textSize="24sp" />

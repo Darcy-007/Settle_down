@@ -16,6 +16,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
+
 class MainActivity : AppCompatActivity(),
     StartingFragment.OnLoginButtonPressedListener,
     HomeFragment.OnHomeFragmentInteractionListener,
